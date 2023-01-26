@@ -1,9 +1,20 @@
 #include "Render.h"
 
-void Render::main(const char* title, int width, int height) {
-	printf("helo");
-	this->mainWindow = new RenderWindow(VideoMode(width, height), title);
-	RenderWindow* window = this->mainWindow; // make the code look nicer
+bool Render::addFont(std::string filename) {
+	Font font;
+	if (!font.loadFromFile(filename)) return false;
+
+	return true;
+}
+
+void Render::initiate(const char* title, int width, int height) {
+	this->mainWindow = new RenderWindow(VideoMode(width, height), title); // instantiates mainWindow property.
+	
+	this->addFont("resources/fonts/arial.ttf");
+}
+
+void Render::main() {
+	RenderWindow* window = this->mainWindow;
 
 	while (window->isOpen()) {
 		Event e;

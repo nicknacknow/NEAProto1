@@ -8,14 +8,21 @@ using namespace sf;
 class Render : public Singleton<Render>
 {
 public:
-	Render() {
-		main("Titloe", 800, 600);
+	Render(const char* title, int width, int height) {
+		this->initiate(title, width, height);
+		this->main();
+		printf("title\n");
 	}
 
-	void addFont(std::string filename){}
-
+	/**
+	 * @brief 
+	 * @param filename 
+	 * @return true if font loaded, false if error
+	*/
+	bool addFont(std::string filename);
 private:
-	void main(const char* title, int width, int height);
+	void initiate(const char* title, int width, int height);
+	void main();
 
 	RenderWindow* mainWindow;
 };

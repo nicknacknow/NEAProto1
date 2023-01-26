@@ -24,7 +24,16 @@ int main() {
 		window.display();
 	}*/
 
-	Render::GetSingleton();
-
+	Render* r = Render::GetSingleton("a", 800, 600); // initiate in a new thread
+	r->addFont("");
+	printf("hi\n");
 	return 1;
 }
+
+/*
+
+Tools > Options > Text Editor > C/C++ > CodeStyle > General > Generated documentation comments style
+
+Set this to Doxygen (/**)
+
+*/

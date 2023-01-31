@@ -25,8 +25,6 @@ int main() {
 	}*/
 
 	Render* r = Render::GetSingleton("a", 800, 600); // initiate in a new thread
-	sf::Text b;
-	Renderable a;
 	
 
 	return 1;

@@ -4,11 +4,19 @@
 
 #include <vector>
 
-std::vector<Renderable> renderables;
+std::vector<Renderable> renderables; // list of Renderable 
+std::vector<std::pair<std::string, Font>> fonts; // list of pair of string and font
 
-bool Render::addFont(std::string filename) {
+Font Render::findFont(std::string fontname) {
+	for (std::pair<std::string, Font> pair : fonts) {
+
+	}
+}
+
+bool Render::addFont(std::string fontname, std::string filename) {
 	Font font;
 	if (!font.loadFromFile(filename)) return false;
+	fonts.push_back(std::pair< std::string, Font>(fontname, font));
 
 	return true;
 }
@@ -16,7 +24,7 @@ bool Render::addFont(std::string filename) {
 void Render::initiate(const char* title, int width, int height) {
 	this->mainWindow = new RenderWindow(VideoMode(width, height), title); // instantiates mainWindow property.
 	
-	if (!this->addFont("resources/fonts/arial.ttf")) {
+	if (!this->addFont("arial", "resources/fonts/arial.ttf")) { // loads standard Arial font into program
 		exit(0);
 	}
 }
@@ -28,13 +36,13 @@ void Render::main() {
 
 	while (window->isOpen()) {
 		Event e;
-		while (window->pollEvent(e))
+		while (window->pollEvent(e)) 
 			if (e.type == Event::Closed)
 				window->close();
 
 		window->clear(Color::Magenta);
 
-		window->draw()
+		
 
 		window->display();
 	}

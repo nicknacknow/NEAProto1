@@ -20,11 +20,14 @@ public:
 	}
 
 	/**
-	 * @brief 
-	 * @param filename 
 	 * @return true if font loaded, false if error
 	*/
-	bool addFont(std::string filename);
+	bool addFont(std::string fontname, std::string filename);
+	/**
+	 * @brief Search through a list 
+	 * @return Related font
+	*/
+	Font findFont(std::string fontname);
 private:
 	void initiate(const char* title, int width, int height);
 	void main();

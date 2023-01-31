@@ -19,4 +19,5 @@ public:
 
 	
 };
-
+// https://en.sfml-dev.org/forums/index.php?topic=22887.0	
+// https://stackoverflow.com/questions/64975510/drawing-from-a-vector-of-objects-using-sfml

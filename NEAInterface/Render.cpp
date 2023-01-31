@@ -9,8 +9,9 @@ std::vector<std::pair<std::string, Font>> fonts; // list of pair of string and f
 
 Font Render::findFont(std::string fontname) {
 	for (std::pair<std::string, Font> pair : fonts) {
-
+		if (pair.first == fontname) return pair.second;
 	}
+	return;
 }
 
 bool Render::addFont(std::string fontname, std::string filename) {

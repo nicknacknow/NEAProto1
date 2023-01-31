@@ -8,10 +8,15 @@ using namespace sf;
 class Render : public Singleton<Render>
 {
 public:
+	/**
+	 * @brief constructs the render class with a main window
+	 * @param title title of main window
+	 * @param width width of main window
+	 * @param height height of main window
+	*/
 	Render(const char* title, int width, int height) {
 		this->initiate(title, width, height);
 		this->main();
-		printf("title\n");
 	}
 
 	/**

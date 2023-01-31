@@ -1,4 +1,10 @@
 #include "Render.h"
+#include "Renderable.h"
+#include "Text.h"
+
+#include <vector>
+
+std::vector<Renderable> renderables;
 
 bool Render::addFont(std::string filename) {
 	Font font;
@@ -10,11 +16,15 @@ bool Render::addFont(std::string filename) {
 void Render::initiate(const char* title, int width, int height) {
 	this->mainWindow = new RenderWindow(VideoMode(width, height), title); // instantiates mainWindow property.
 	
-	this->addFont("resources/fonts/arial.ttf");
+	if (!this->addFont("resources/fonts/arial.ttf")) {
+		exit(0);
+	}
 }
 
 void Render::main() {
 	RenderWindow* window = this->mainWindow;
+
+	
 
 	while (window->isOpen()) {
 		Event e;
@@ -23,6 +33,8 @@ void Render::main() {
 				window->close();
 
 		window->clear(Color::Magenta);
+
+		window->draw()
 
 		window->display();
 	}

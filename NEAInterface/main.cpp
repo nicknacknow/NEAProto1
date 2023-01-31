@@ -6,7 +6,7 @@
 #include "Render.h"
 
 
-
+#include "Renderable.h"
 int main() {
 	/*RenderWindow window(VideoMode(800, 600), "Title");
 
@@ -25,8 +25,10 @@ int main() {
 	}*/
 
 	Render* r = Render::GetSingleton("a", 800, 600); // initiate in a new thread
-	r->addFont("");
-	printf("hi\n");
+	sf::Text b;
+	Renderable a;
+	
+
 	return 1;
 }
 

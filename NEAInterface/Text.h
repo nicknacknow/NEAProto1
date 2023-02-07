@@ -1,9 +1,9 @@
 #pragma once
 #include "Renderable.h"
 
-class Text : public Renderable
+class Textt : public Renderable
 {
 public:
-	
+	render_type GetType() override { return render_type::Text; }
 };
 

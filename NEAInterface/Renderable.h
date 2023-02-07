@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#define add_property(name, type) \
-virtual type name() { \
-return "h";	\
-}
-
+enum render_type {
+	None,
+	Text,
+	RectangleShape
+};
 
 /**
  * @brief virtual class - allow functions to be overridden 
@@ -13,7 +13,7 @@ return "h";	\
 class Renderable
 {
 public:
-
+	virtual render_type GetType() { return render_type::None; };
 	//virtual sf::Vector2f GetPosition() {};
 	//virtual void SetPosition(sf::Vector2f pos) {};
 

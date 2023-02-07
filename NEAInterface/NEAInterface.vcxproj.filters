@@ -50,5 +50,8 @@
     <ClInclude Include="Renderable.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

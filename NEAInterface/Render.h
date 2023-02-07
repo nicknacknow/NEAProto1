@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "Renderable.h"
 #include "Singleton.h"
 
 using namespace sf;
@@ -28,6 +29,8 @@ public:
 	 * @return Related font
 	*/
 	Font findFont(std::string fontname);
+
+	void draw();
 private:
 	void initiate(const char* title, int width, int height);
 	void main();

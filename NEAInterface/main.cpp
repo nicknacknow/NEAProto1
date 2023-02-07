@@ -7,6 +7,12 @@
 
 
 #include "Renderable.h"
+#include "Text.h"
+
+void test(Renderable* r) {
+	printf("%s\n", r->GetType());
+}
+
 int main() {
 	/*RenderWindow window(VideoMode(800, 600), "Title");
 
@@ -24,7 +30,7 @@ int main() {
 		window.display();
 	}*/
 
-	Render* r = Render::GetSingleton("a", 800, 600); // initiate in a new thread
+	Render* r = Render::GetSingleton("Physics", 800, 600); // initiate in a new thread
 	
 
 	return 1;

@@ -9,7 +9,9 @@
 #include "Renderable.h"
 #include "Text.h"
 
-void test(Renderable* r) {
+#define PROGRAM_NAME "Nick's NEA Program"
+
+void test(Rendering::Renderable* r) {
 	printf("%s\n", r->GetType());
 }
 
@@ -30,8 +32,11 @@ int main() {
 		window.display();
 	}*/
 
-	Render* r = Render::GetSingleton("Physics", 800, 600); // initiate in a new thread
-	
+	sf::Thread th([]() { Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600); });
+	th.launch(); // render in a separate thread
+
+	Text a;
+	Rendering::Renderable* r = new Rendering::Renderable();
 
 	return 1;
 }

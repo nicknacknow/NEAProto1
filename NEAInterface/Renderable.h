@@ -1,23 +1,33 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-enum render_type {
-	None,
-	Text,
-	RectangleShape
-};
+#include "LinkedList.h"
 
-/**
- * @brief virtual class - allow functions to be overridden 
-*/
-class Renderable
-{
-public:
-	virtual render_type GetType() { return render_type::None; };
-	//virtual sf::Vector2f GetPosition() {};
-	//virtual void SetPosition(sf::Vector2f pos) {};
+namespace Rendering {
+	enum render_type {
+		None,
+		Text,
+		RectangleShape
+	};
 
-	
-};
+	/**
+	 * @brief virtual class - allow functions to be overridden
+	*/
+	class Renderable : public sf::Drawable
+	{
+	public:
+		/**
+		 * @return returns type of Renderable
+		*/
+		virtual render_type GetType() { return render_type::None; };
+
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+		{
+
+		}
+	};
+
+	//LinkedList<Renderable> renderables;
+}
 // https://en.sfml-dev.org/forums/index.php?topic=22887.0	
 // https://stackoverflow.com/questions/64975510/drawing-from-a-vector-of-objects-using-sfml

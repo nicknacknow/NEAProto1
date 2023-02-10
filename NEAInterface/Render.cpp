@@ -40,13 +40,12 @@ void Render::initiate(const char* title, int width, int height) {
 void Render::main() {
 	RenderWindow* window = this->mainWindow;
 
-	sf::RectangleShape rectangle;
-	rectangle.setSize(sf::Vector2f(10, 10));
-	rectangle.setPosition(10, 20);
+	
 
 	LinkedList<sf::RectangleShape> shapes;
 
 	LinkedList<const sf::Drawable&> drrr;
+	printf("%p\n", &drrr);
 
 	Font arial;
 	if (!this->findFont("arial", arial)) {
@@ -66,6 +65,9 @@ void Render::main() {
 	sf::RenderTexture test;
 	test.create(800, 600);
 
+	sf::CircleShape circle;
+	circle.setRadius(5);
+
 	while (window->isOpen()) {
 		Event e;
 		while (window->pollEvent(e))
@@ -80,28 +82,47 @@ void Render::main() {
 		window->clear(Color(33,33,33));
 
 		Vector2i pos = Mouse::getPosition(*window);
-		//rectangle.setPosition(pos.x, pos.y);
-		//rectangle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-		//window->draw(rectangle);
 
-		miya.setPosition(pos.x + 50, pos.y);
 
-		drrr.AddValue(miya);
-		const Drawable& drawme = drrr.getValue(0);
+		/*
+		sf::CircleShape* circle = new sf::CircleShape;
+		circle->setRadius(5);
+		circle->setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+		circle->setPosition(pos.x, pos.y);
+		*/
+
+
 		
-		window->draw(drawme);
-		drrr.RemoveValue(0);
+
+		/*sf::RectangleShape* rectangle = new sf::RectangleShape;
+		rectangle->setSize(sf::Vector2f(10, 10));
+		//rectangle->setPosition(10, 20);
+		rectangle->setPosition(pos.x, pos.y);
+		rectangle->setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));*/
+		//window->draw(rectangle);
+		
+		//miya.setPosition(pos.x + 50, pos.y);
+
+		//drrr.AddValue(miya);
+		//window->draw(drrr.getValue(0));
+		//drrr.RemoveValue(0);
+
+		//printf("%d\n", drrr.count());
 
 		//window->draw(miya);
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-			test.draw(rectangle);
+			//test.draw(rectangle);
+			circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+			circle.setPosition(pos.x, pos.y);
+			drrr.AddValue(circle);
+			printf("%d\n", drrr.count());
 			//shapes.AddValue(rectangle);
 		}
 
-		//for (int i = 0; i < shapes.count(); i++) {
-		//	window->draw(shapes.getValue(i));
-		//}
+		for (int i = 0; i < drrr.count(); i++) {
+			test.draw(drrr.getValue(i));
+		}
 
 		test.display();
 		sf::Sprite bg(test.getTexture());

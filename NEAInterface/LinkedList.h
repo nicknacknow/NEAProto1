@@ -31,15 +31,12 @@ public:
 	*/
 	void RemoveValue(int index) {
 		element* i = start;
-		while (i != nullptr) {
-			if (index == 1) { // next value is value to be erased
-				if (i->next != nullptr) // just a check
-					i->next = i->next->next; // skip next value
-			}
-			if (i->next == nullptr) break;
-			i = i->next;
+		while (i->next && index != 0) {
 			index--;
+			i = i->next;
 		}
+		if (i == nullptr || i->next == nullptr) return;
+		i->next = i->next->next;
 	}
 
 	/**
@@ -55,6 +52,21 @@ public:
 			i = i->next;
 			index--;
 		}
+	}
+
+	
+	T popValue() {
+		element* i = start;
+		element* prev = i; // give it a value so when set ->next it isn't null and cause an error.. when prev is start, ->next will be nullptr anyway so no damage done
+
+		while (i->next) {
+			prev = i;
+			i = i->next;
+		}
+
+		T val = i->val;
+		prev->next = nullptr;
+		return val;
 	}
 
 	/**

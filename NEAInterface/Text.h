@@ -5,14 +5,17 @@ namespace Rendering {
 	class Text : public Renderable
 	{
 	public:
-		/*Text(const char* string, int size)
-		{
-			text.setString(string);
-		}*/
+		Text() {}
+		Text(sf::Text t) {
+			value = new RenderValue(t);
+		}
 
-		render_type GetType() override { return render_type::Text; }
+		render_type GetType() override { return render_type::tText; }
 
+		RenderValue* get() override {
+			return this->value;
+		}
 	private:
-		sf::Text text;
+		RenderValue* value;// = new RenderValue;
 	};
 }

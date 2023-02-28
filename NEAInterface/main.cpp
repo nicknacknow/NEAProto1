@@ -35,8 +35,11 @@ int main() {
 	sf::Thread th([]() { Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600); });
 	th.launch(); // render in a separate thread
 
-	Text a;
 	Rendering::Renderable* r = new Rendering::Renderable();
+
+	[](const char* hi) {
+		printf("%s\n", hi);
+	};
 
 	return 1;
 }

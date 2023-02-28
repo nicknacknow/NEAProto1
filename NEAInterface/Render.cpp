@@ -30,7 +30,7 @@ bool Render::addFont(std::string fontname, std::string filename) {
 
 void Render::initiate(const char* title, int width, int height) {
 	this->mainWindow = new RenderWindow(VideoMode(width, height), title, Style::Close); // instantiates mainWindow property.
-	//this->mainWindow->setFramerateLimit(60);
+	this->mainWindow->setFramerateLimit(60);
 
 	if (!this->addFont("arial", "resources/fonts/arial.ttf")) { // loads standard Arial font into program
 		exit(0);
@@ -39,10 +39,6 @@ void Render::initiate(const char* title, int width, int height) {
 
 void Render::main() {
 	RenderWindow* window = this->mainWindow;
-
-	
-
-	LinkedList<sf::RectangleShape> shapes;
 
 	LinkedList<const sf::Drawable&> drrr;
 	printf("%p\n", &drrr);
@@ -56,8 +52,8 @@ void Render::main() {
 	miya.setFont(arial);
 	miya.setString("hello");
 	//miya.setCharacterSize(24);
-	miya.setFillColor(Color::Red);
-	miya.setStyle(sf::Text::Bold );
+	//miya.setFillColor(Color::Red);
+	//miya.setStyle(sf::Text::Bold );
 	miya.setPosition(50, 50);
 	
 	sf::Clock clock;
@@ -68,6 +64,8 @@ void Render::main() {
 	sf::CircleShape circle;
 	circle.setRadius(5);
 
+	Rendering::Text texst(miya);
+
 	while (window->isOpen()) {
 		Event e;
 		while (window->pollEvent(e))
@@ -77,39 +75,12 @@ void Render::main() {
 		float time = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
-		miya.setString(std::to_string(1 / time));
+		//miya.setString(std::to_string(1 / time));
 
 		window->clear(Color(33,33,33));
 
 		Vector2i pos = Mouse::getPosition(*window);
 
-
-		/*
-		sf::CircleShape* circle = new sf::CircleShape;
-		circle->setRadius(5);
-		circle->setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-		circle->setPosition(pos.x, pos.y);
-		*/
-
-
-		
-
-		/*sf::RectangleShape* rectangle = new sf::RectangleShape;
-		rectangle->setSize(sf::Vector2f(10, 10));
-		//rectangle->setPosition(10, 20);
-		rectangle->setPosition(pos.x, pos.y);
-		rectangle->setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));*/
-		//window->draw(rectangle);
-		
-		//miya.setPosition(pos.x + 50, pos.y);
-
-		//drrr.AddValue(miya);
-		//window->draw(drrr.getValue(0));
-		//drrr.RemoveValue(0);
-
-		//printf("%d\n", drrr.count());
-
-		//window->draw(miya);
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
 			//test.draw(rectangle);
@@ -124,10 +95,29 @@ void Render::main() {
 			test.draw(drrr.getValue(i));
 		}
 
+		window->draw(texst.get()->text);
+
+		for (int i = 0; i < renderables.count(); i++) {
+			Rendering::Renderable r = renderables.getValue(i);
+			r.step();
+			
+			switch (r.GetType()) // now we render the different types of renderable :)
+			{
+			case Rendering::tText:
+				//window->draw(r.get());
+				break;
+			case Rendering::tNone:
+			default:
+				break;
+			}
+		}
+
 		test.display();
 		sf::Sprite bg(test.getTexture());
 
 		window->draw(bg);
+
+		//window->draw(miya);
 
 		window->display();
 	}

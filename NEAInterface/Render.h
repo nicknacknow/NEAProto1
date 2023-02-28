@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Renderable.h"
 #include "Singleton.h"
 
 using namespace sf;
@@ -10,6 +9,8 @@ namespace Rendering {
 	class Render : public Singleton<Render>
 	{
 	public:
+		Render() {}
+
 		/**
 		 * @brief constructs the render class with a main window
 		 * @param title title of main window

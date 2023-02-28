@@ -1,30 +1,43 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "Render.h"
 #include "LinkedList.h"
 
 namespace Rendering {
 	enum render_type {
-		None,
-		Text,
-		RectangleShape
+		tNone,
+		tText,
+		tRectangleShape
+	};
+
+	union RenderValue {
+		sf::Text text;
+		sf::RectangleShape rect;
+
+		RenderValue() {}
+		RenderValue(sf::Text t) : text(t) {}
+		RenderValue(sf::RectangleShape t) : rect(t) {}
+		//~RenderValue() {}
 	};
 
 	/**
 	 * @brief virtual class - allow functions to be overridden
 	*/
-	class Renderable : public sf::Drawable
+	class Renderable
 	{
 	public:
 		/**
 		 * @return returns type of Renderable
 		*/
-		virtual render_type GetType() { return render_type::None; };
+		virtual render_type GetType() { return render_type::tNone; };
+		virtual RenderValue* get() { return new RenderValue; }
 
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-		{
+		void step() {};
 
-		}
+		// add a 'addstepfunction' method so different renderables of same type execute different things at step
+	private:
+		
 	};
 
 	//LinkedList<Renderable> renderables;

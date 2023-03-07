@@ -91,13 +91,21 @@ void Render::main() {
 			circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
 			circle.setPosition(pos.x, pos.y);
 			drrr.AddValue(circle);
+			test.draw(circle);
+
 			printf("%d\n", drrr.count());
 			//shapes.AddValue(rectangle);
 		}
 
-		for (int i = 0; i < drrr.count(); i++) {
-			test.draw(drrr.getValue(i));
-		}
+		//for (int i = 0; i < drrr.count(); i++) {
+		//	test.draw(drrr.getValue(i));
+		//} dont do this 
+
+
+		test.display();
+		sf::Sprite bg(test.getTexture());
+
+		window->draw(bg);
 
 		//window->draw(texst.get()->text);
 		for (int i = 0; i < renderables.count(); i++) {
@@ -115,10 +123,7 @@ void Render::main() {
 			}
 		}
 
-		test.display();
-		sf::Sprite bg(test.getTexture());
-
-		window->draw(bg);
+		
 
 		//window->draw(miya);
 

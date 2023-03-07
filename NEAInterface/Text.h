@@ -8,11 +8,12 @@ namespace Rendering {
 		Text() {}
 		Text(sf::Text t) {
 			value = new RenderValue(t);
+			
 		}
 
-		render_type GetType() override { return render_type::tText; }
+		virtual render_type GetType() override { return render_type::tText; }
 
-		RenderValue* get() override {
+		virtual RenderValue* get() override {
 			return this->value;
 		}
 	private:

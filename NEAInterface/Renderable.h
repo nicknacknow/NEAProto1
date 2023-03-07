@@ -33,11 +33,17 @@ namespace Rendering {
 		virtual render_type GetType() { return render_type::tNone; };
 		virtual RenderValue* get() { return new RenderValue; }
 
-		void step() {};
+		void step(float dT) {
+			for (int i = 0; i < step_functions.count(); i++)
+				step_functions.getValue(i)(this->get(), dT);
+		}
+		void addstepfunction(void (*f)(RenderValue*, float)) {
+			step_functions.AddValue(f);
+		}
 
 		// add a 'addstepfunction' method so different renderables of same type execute different things at step
 	private:
-		
+		LinkedList<void (*)(RenderValue*, float)> step_functions;
 	};
 
 	//LinkedList<Renderable> renderables;

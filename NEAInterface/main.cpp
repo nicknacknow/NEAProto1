@@ -39,7 +39,7 @@ int main() {
 
 	[](const char* hi) {
 		printf("%s\n", hi);
-	};
+	}("olleh");
 
 	return 1;
 }

@@ -6,7 +6,7 @@
 
 #include <vector>
 
-LinkedList<Rendering::Renderable> renderables; // list of Renderable 
+LinkedList<Rendering::Renderable*> renderables; // list of Renderable 
 LinkedList<std::pair<std::string, Font>> fonts; // list of pair of string and font
 
 using namespace Rendering;
@@ -65,6 +65,10 @@ void Render::main() {
 	circle.setRadius(5);
 
 	Rendering::Text texst(miya);
+	texst.addstepfunction([](RenderValue* val, float dT) {
+		val->text.setString(std::to_string(1 / dT));
+		});
+	renderables.AddValue(&texst);
 
 	while (window->isOpen()) {
 		Event e;
@@ -95,16 +99,15 @@ void Render::main() {
 			test.draw(drrr.getValue(i));
 		}
 
-		window->draw(texst.get()->text);
-
+		//window->draw(texst.get()->text);
 		for (int i = 0; i < renderables.count(); i++) {
-			Rendering::Renderable r = renderables.getValue(i);
-			r.step();
+			Rendering::Renderable* r = renderables.getValue(i);
+			r->step(time);
 			
-			switch (r.GetType()) // now we render the different types of renderable :)
+			switch (r->GetType()) // now we render the different types of renderable :)
 			{
 			case Rendering::tText:
-				//window->draw(r.get());
+				window->draw(r->get()->text);
 				break;
 			case Rendering::tNone:
 			default:

@@ -33,9 +33,6 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="Renderable.cpp">
-      <Filter>Source Files\common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render.h">

@@ -30,9 +30,6 @@
     <ClCompile Include="Render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Source Files\common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render.h">
@@ -48,6 +45,9 @@
       <Filter>Header Files\common</Filter>
     </ClInclude>
     <ClInclude Include="LinkedList.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
   </ItemGroup>

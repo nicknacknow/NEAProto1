@@ -134,9 +134,9 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render.cpp" />
-    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Renderable.h" />

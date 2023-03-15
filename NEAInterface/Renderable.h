@@ -8,15 +8,18 @@ namespace Rendering {
 	enum render_type {
 		tNone,
 		tText,
+		tCircleShape,
 		tRectangleShape
 	};
 
 	union RenderValue {
 		sf::Text text;
+		sf::CircleShape circ;
 		sf::RectangleShape rect;
 
 		RenderValue() {}
 		RenderValue(sf::Text t) : text(t) {}
+		RenderValue(sf::CircleShape t) : circ(t) {}
 		RenderValue(sf::RectangleShape t) : rect(t) {}
 		//~RenderValue() {}
 	};

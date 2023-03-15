@@ -1,5 +1,6 @@
 #include "Render.h"
 #include "Renderable.h"
+#include "Circle.h"
 #include "Text.h"
 
 #include "LinkedList.h"
@@ -70,6 +71,14 @@ void Render::main() {
 		});
 	renderables.AddValue(&texst);
 
+	sf::Text miya2;
+	miya2.setFont(arial);
+	miya2.setString("hillo");
+	miya2.setPosition(100, 100);
+
+	Rendering::Text texst2(miya2);
+	renderables.AddValue(&texst2);
+
 	while (window->isOpen()) {
 		Event e;
 		while (window->pollEvent(e))
@@ -87,14 +96,20 @@ void Render::main() {
 
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-			//test.draw(rectangle);
-			circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-			circle.setPosition(pos.x, pos.y);
-			drrr.AddValue(circle);
-			test.draw(circle);
+			//circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+			//circle.setPosition(pos.x, pos.y);
 
-			printf("%d\n", drrr.count());
-			//shapes.AddValue(rectangle);
+			sf::CircleShape circ;
+			circ.setRadius(5);
+			circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+			circ.setPosition(pos.x, pos.y);
+
+			Rendering::Circle* c = new Rendering::Circle(circ);
+			c->addstepfunction([](RenderValue* val, float dT) {
+				val->circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+				});
+			renderables.AddValue(c);
+			//test.draw(circle);
 		}
 
 		//for (int i = 0; i < drrr.count(); i++) {
@@ -108,7 +123,7 @@ void Render::main() {
 		window->draw(bg);
 
 		//window->draw(texst.get()->text);
-		for (int i = 0; i < renderables.count(); i++) {
+		for (int i = renderables.count() - 1; i >= 0; i--) {
 			Rendering::Renderable* r = renderables.getValue(i);
 			r->step(time);
 			
@@ -116,6 +131,9 @@ void Render::main() {
 			{
 			case Rendering::tText:
 				window->draw(r->get()->text);
+				break;
+			case Rendering::tCircleShape:
+				window->draw(r->get()->circ);
 				break;
 			case Rendering::tNone:
 			default:

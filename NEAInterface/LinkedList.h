@@ -52,6 +52,7 @@ public:
 			i = i->next;
 			index--;
 		}
+		return i->val;
 	}
 
 	

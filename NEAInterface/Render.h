@@ -2,10 +2,12 @@
 #include <SFML/Graphics.hpp>
 
 #include "Singleton.h"
+#include "Renderable.h"
 
 using namespace sf;
 
 namespace Rendering {
+	typedef void (*render_step_function)(RenderWindow* window, float dT);
 	class Render : public Singleton<Render>
 	{
 	public:
@@ -23,14 +25,10 @@ namespace Rendering {
 		}
 
 		/**
+		 * @brief loads font from file and adds to fonts list
 		 * @return true if font loaded, false if error
 		*/
 		bool addFont(std::string fontname, std::string filename);
-		/**
-		 * @brief Search through a list
-		 * @return Related font
-		*/
-
 
 		/**
 		 * @brief find added fonts 
@@ -40,7 +38,12 @@ namespace Rendering {
 		*/
 		bool findFont(std::string fontname, Font& font);
 
-		void draw();
+		/**
+		 * @brief add a function to be called every render step.
+		*/
+		void addRenderStepFunction(render_step_function f);
+
+		void addRenderable(Renderable* r);
 	private:
 		void initiate(const char* title, int width, int height);
 		void main();

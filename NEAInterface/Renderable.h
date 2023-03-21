@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "LinkedList.h"
 
+
 namespace Rendering {
 	enum render_type {
 		tNone,
@@ -24,6 +25,8 @@ namespace Rendering {
 		//~RenderValue() {}
 	};
 
+	typedef void (*step_function)(RenderValue*, float);
+
 	/**
 	 * @brief virtual class - allow functions to be overridden
 	*/
@@ -40,13 +43,13 @@ namespace Rendering {
 			for (int i = 0; i < step_functions.count(); i++)
 				step_functions.getValue(i)(this->get(), dT);
 		}
-		void addstepfunction(void (*f)(RenderValue*, float)) {
+		void addstepfunction(step_function f) {
 			step_functions.AddValue(f);
 		}
 
 		// add a 'addstepfunction' method so different renderables of same type execute different things at step
 	private:
-		LinkedList<void (*)(RenderValue*, float)> step_functions;
+		LinkedList<step_function> step_functions;
 	};
 
 	//LinkedList<Renderable> renderables;

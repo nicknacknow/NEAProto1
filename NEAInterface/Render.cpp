@@ -7,10 +7,19 @@
 
 #include <vector>
 
-LinkedList<Rendering::Renderable*> renderables; // list of Renderable 
-LinkedList<std::pair<std::string, Font>> fonts; // list of pair of string and font
+LinkedList<std::pair<std::string, Font>> fonts; // list of name and font
+LinkedList<Rendering::Renderable*> renderables; // list of Renderable items
+LinkedList<Rendering::render_step_function> render_step_functions; // list of functions to be called every render step
 
 using namespace Rendering;
+
+void Render::addRenderable(Renderable* r) {
+	renderables.AddValue(r);
+}
+
+void Render::addRenderStepFunction(render_step_function f) {
+	render_step_functions.AddValue(f);
+}
 
 bool Render::findFont(std::string fontname, Font& font) {
 	for (int i = 0; i < fonts.count(); i++)
@@ -40,9 +49,6 @@ void Render::initiate(const char* title, int width, int height) {
 
 void Render::main() {
 	RenderWindow* window = this->mainWindow;
-
-	LinkedList<const sf::Drawable&> drrr;
-	printf("%p\n", &drrr);
 
 	Font arial;
 	if (!this->findFont("arial", arial)) {
@@ -88,41 +94,11 @@ void Render::main() {
 		float time = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
-		//miya.setString(std::to_string(1 / time));
-
 		window->clear(Color(33,33,33));
 
-		Vector2i pos = Mouse::getPosition(*window);
+		for (int i = 0; i < render_step_functions.count(); i++)
+			render_step_functions.getValue(i)(window, time);
 
-
-		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-			//circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-			//circle.setPosition(pos.x, pos.y);
-
-			sf::CircleShape circ;
-			circ.setRadius(5);
-			circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-			circ.setPosition(pos.x, pos.y);
-
-			Rendering::Circle* c = new Rendering::Circle(circ);
-			c->addstepfunction([](RenderValue* val, float dT) {
-				val->circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-				});
-			renderables.AddValue(c);
-			//test.draw(circle);
-		}
-
-		//for (int i = 0; i < drrr.count(); i++) {
-		//	test.draw(drrr.getValue(i));
-		//} dont do this 
-
-
-		test.display();
-		sf::Sprite bg(test.getTexture());
-
-		window->draw(bg);
-
-		//window->draw(texst.get()->text);
 		for (int i = renderables.count() - 1; i >= 0; i--) {
 			Rendering::Renderable* r = renderables.getValue(i);
 			r->step(time);
@@ -141,12 +117,11 @@ void Render::main() {
 			}
 		}
 
-		
-
-		//window->draw(miya);
-
 		window->display();
 	}
 }
+
+// add render step functions for per render... then add MouseHandler etc which can be used by Buttons.
+// in mouseHandler i can use foreground checks etc... here we should only bother with rendering
 
 // https://stackoverflow.com/questions/67190153/sfml-draw-only-once-and-render-forever

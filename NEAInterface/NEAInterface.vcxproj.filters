@@ -50,5 +50,8 @@
     <ClInclude Include="Circle.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

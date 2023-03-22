@@ -111,6 +111,9 @@ void Render::main() {
 			case Rendering::tCircleShape:
 				window->draw(r->get()->circ);
 				break;
+			case Rendering::tRectangleShape:
+				window->draw(r->get()->rect);
+				break;
 			case Rendering::tNone:
 			default:
 				break;

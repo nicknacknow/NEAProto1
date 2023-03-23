@@ -31,13 +31,10 @@ int main() {
 
 	sf::Thread th([]() { Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600); });
 
-	Rendering::Render::GetSingleton()->addRenderStepFunction([](RenderWindow* window, float dT) {
+	/*Rendering::Render::GetSingleton()->addRenderStepFunction([](RenderWindow* window, float dT) {
 		Vector2i pos = Mouse::getPosition(*window);
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-			//circle.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-			//circle.setPosition(pos.x, pos.y);
-
 			printf("Mouse down!");
 
 			sf::CircleShape circ;
@@ -52,7 +49,7 @@ int main() {
 
 			Rendering::Render::GetSingleton()->addRenderable(c);
 		}
-	});
+	});*/
 
 	th.launch(); // render in a separate thread
 

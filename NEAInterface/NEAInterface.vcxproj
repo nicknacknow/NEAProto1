@@ -136,8 +136,10 @@
     <ClCompile Include="Render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="MouseHandler.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Renderable.h" />

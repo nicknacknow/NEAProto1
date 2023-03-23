@@ -7,7 +7,7 @@
 using namespace sf;
 
 namespace Rendering {
-	typedef void (*render_step_function)(RenderWindow* window, float dT);
+	typedef void (*render_step_function)(RenderWindow* r, float dT);
 	class Render : public Singleton<Render>
 	{
 	public:
@@ -43,7 +43,17 @@ namespace Rendering {
 		*/
 		void addRenderStepFunction(render_step_function f);
 
+		/**
+		 * @brief 
+		 * @param r 
+		*/
 		void addRenderable(Renderable* r);
+
+		/**
+		 * @brief 
+		 * @return 
+		*/
+		Vector2i GetMousePosition();
 	private:
 		void initiate(const char* title, int width, int height);
 		void main();

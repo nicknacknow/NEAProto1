@@ -1,17 +1,22 @@
 #include "Render.h"
 #include "Renderable.h"
+
+#include "Rectangle.h"
 #include "Circle.h"
 #include "Text.h"
 
 #include "LinkedList.h"
-
-#include <vector>
+#include "MouseHandler.h"
 
 LinkedList<std::pair<std::string, Font>> fonts; // list of name and font
 LinkedList<Rendering::Renderable*> renderables; // list of Renderable items
 LinkedList<Rendering::render_step_function> render_step_functions; // list of functions to be called every render step
 
 using namespace Rendering;
+
+Vector2i Render::GetMousePosition() {
+	return Mouse::getPosition(*mainWindow);
+}
 
 void Render::addRenderable(Renderable* r) {
 	renderables.AddValue(r);
@@ -57,19 +62,7 @@ void Render::main() {
 
 	sf::Text miya;
 	miya.setFont(arial);
-	miya.setString("hello");
-	//miya.setCharacterSize(24);
-	//miya.setFillColor(Color::Red);
-	//miya.setStyle(sf::Text::Bold );
 	miya.setPosition(50, 50);
-	
-	sf::Clock clock;
-
-	sf::RenderTexture test;
-	test.create(800, 600);
-
-	sf::CircleShape circle;
-	circle.setRadius(5);
 
 	Rendering::Text texst(miya);
 	texst.addstepfunction([](RenderValue* val, float dT) {
@@ -85,6 +78,14 @@ void Render::main() {
 	Rendering::Text texst2(miya2);
 	renderables.AddValue(&texst2);
 
+	sf::RectangleShape rect;
+	rect.setSize(Vector2f(200, 10));
+	rect.setPosition(Vector2f(500, 200));
+
+	Rendering::Rectangle r(rect);
+	renderables.AddValue(&r);
+
+	sf::Clock clock;
 	while (window->isOpen()) {
 		Event e;
 		while (window->pollEvent(e))

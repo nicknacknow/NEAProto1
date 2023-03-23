@@ -53,5 +53,11 @@
     <ClInclude Include="Rectangle.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
+    <ClInclude Include="MouseHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

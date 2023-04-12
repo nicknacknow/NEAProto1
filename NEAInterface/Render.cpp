@@ -8,6 +8,8 @@
 #include "LinkedList.h"
 #include "MouseHandler.h"
 
+#include "Button.h"
+
 LinkedList<std::pair<std::string, Font>> fonts; // list of name and font
 LinkedList<Rendering::Renderable*> renderables; // list of Renderable items
 LinkedList<Rendering::render_step_function> render_step_functions; // list of functions to be called every render step
@@ -50,6 +52,10 @@ void Render::initiate(const char* title, int width, int height) {
 	if (!this->addFont("arial", "resources/fonts/arial.ttf")) { // loads standard Arial font into program
 		exit(0);
 	}
+
+	this->addRenderStepFunction([](RenderWindow* window, float dT) {
+		Rendering::MouseHandler::GetSingleton()->step(window, dT);
+		});
 }
 
 void Render::main() {
@@ -82,8 +88,11 @@ void Render::main() {
 	rect.setSize(Vector2f(200, 10));
 	rect.setPosition(Vector2f(500, 200));
 
-	Rendering::Rectangle r(rect);
-	renderables.AddValue(&r);
+	//Rendering::Rectangle r(rect);
+	//renderables.AddValue(&r);
+
+	Button buttoni(Vector2f(500, 200), Vector2f(200,10));
+	renderables.AddValue(&buttoni);
 
 	sf::Clock clock;
 	while (window->isOpen()) {
@@ -127,5 +136,7 @@ void Render::main() {
 
 // add render step functions for per render... then add MouseHandler etc which can be used by Buttons.
 // in mouseHandler i can use foreground checks etc... here we should only bother with rendering
+
+// to make a remove drawable from list function, loop thru and cmp dword value of RenderValue property
 
 // https://stackoverflow.com/questions/67190153/sfml-draw-only-once-and-render-forever

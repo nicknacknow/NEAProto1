@@ -1,15 +1,17 @@
 #pragma once
 #include "Render.h"
+#include "Rectangle.h"
 
 namespace Rendering {
 	typedef void (*button_click_function)();
-	class Button {
+	class Button : public Rectangle {
 	public:
 		Button() {}
 		
 		Button(Vector2f pos, Vector2f size, button_click_function f = NULL) : func(f) {
-			r.get()->rect.setSize(size);
-			r.get()->rect.setPosition(pos);
+			this->get()->rect.setSize(size);
+			this->get()->rect.setPosition(pos);
+			//MouseHandler::GetSingleton()->AddButton(this); -- create Render::CreateButton as well as other renderables. maybe make into 1 function, pass string for type and return type is Renderable? vararg which can be passed to initialiser
 		}
 
 		/**
@@ -24,7 +26,7 @@ namespace Rendering {
 		*/
 		bool IsMouseInArea() {
 			Vector2i p = Rendering::Render::GetSingleton()->GetMousePosition();
-			sf::RectangleShape rect = r.get()->rect;
+			sf::RectangleShape rect = this->get()->rect;
 
 			if (p.x > rect.getPosition().x && p.x < rect.getPosition().x + rect.getSize().x)
 				if (p.y > rect.getPosition().y && p.y < rect.getPosition().y + rect.getSize().y) {
@@ -34,7 +36,7 @@ namespace Rendering {
 		}
 
 		button_click_function func; // could do a linked list but really it can all be put into a func
-	private:
-		Rendering::Rectangle r;
+	//private:
+		//Rendering::Rectangle r;
 	};
 }

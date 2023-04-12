@@ -7,7 +7,7 @@ namespace Rendering {
 	public:
 		Rectangle() {
 			sf::RectangleShape r;
-			value->rect = r;
+			this->value = new RenderValue(r);
 		}
 		Rectangle(sf::RectangleShape r) : value(new RenderValue(r)) {}
 

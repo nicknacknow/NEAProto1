@@ -69,3 +69,14 @@ Tools > Options > Text Editor > C/C++ > CodeStyle > General > Generated document
 Set this to Doxygen (/**)
 
 */
+
+
+/*
+
+to-do:
+add a SceneHandler class
+Scenes have different functions, one is to build (& initialize variables) and other is render step
+
+for example one scene can be SHM.
+
+*/

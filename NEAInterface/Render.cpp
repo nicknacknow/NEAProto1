@@ -16,10 +16,6 @@ LinkedList<Rendering::render_step_function> render_step_functions; // list of fu
 
 using namespace Rendering;
 
-Vector2i Render::GetMousePosition() {
-	return Mouse::getPosition(*mainWindow);
-}
-
 void Render::addRenderable(Renderable* r) {
 	renderables.AddValue(r);
 }
@@ -69,6 +65,11 @@ void Render::main() {
 	sf::Text miya;
 	miya.setFont(arial);
 	miya.setPosition(50, 50);
+	
+	Rendering::Text t = this->CreateText();
+	t.GetValue()->setFont(arial);
+	t.GetValue()->setPosition(150, 100);
+	t.GetValue()->setString("heyyy");
 
 	Rendering::Text texst(miya);
 	texst.addstepfunction([](RenderValue* val, float dT) {
@@ -91,8 +92,15 @@ void Render::main() {
 	//Rendering::Rectangle r(rect);
 	//renderables.AddValue(&r);
 
-	Button buttoni(Vector2f(500, 200), Vector2f(200,10));
-	renderables.AddValue(&buttoni);
+	//Button buttoni(Vector2f(500, 200), Vector2f(200,10));
+	//renderables.AddValue(&buttoni);
+
+	Rendering::Button b = this->CreateButton([]() {
+		printf("\nClicked Button b!\n");
+		});
+	b.GetValue()->setSize(Vector2f(200, 10));
+	b.GetValue()->setPosition(Vector2f(500, 200));
+
 
 	sf::Clock clock;
 	while (window->isOpen()) {

@@ -13,6 +13,10 @@ namespace Rendering {
 		virtual RenderValue* get() {
 			return this->value;
 		}
+
+		sf::Text* GetValue() { // put this in other renderable classes too
+			return &(this->get()->text);
+		}
 	private:
 		RenderValue* value;// = new RenderValue;
 	};

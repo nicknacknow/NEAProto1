@@ -16,6 +16,10 @@ namespace Rendering {
 		virtual RenderValue* get() {
 			return this->value;
 		}
+
+		sf::RectangleShape* GetValue() {
+			return &(this->get()->rect);
+		}
 	private:
 		RenderValue* value;
 	};

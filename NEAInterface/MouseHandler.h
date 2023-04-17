@@ -2,6 +2,8 @@
 #include "Render.h"
 #include "Button.h"
 
+using namespace sf;
+
 namespace Rendering {
 	class MouseHandler : public Singleton<MouseHandler> {
 	public:
@@ -9,18 +11,27 @@ namespace Rendering {
 
 		}
 
+		std::vector<Button> getButtonsInMouse(RenderWindow* r) {
+			std::vector<Button> v;
+
+			for (int i = 0; i < buttons.count(); i++) {
+				Button b = buttons.getValue(i);
+				if (b.IsMouseInArea(sf::Mouse::getPosition(*r))) // get mouse position within window
+					v.push_back(b);
+			}
+
+			return v;
+		}
+
 		void step(RenderWindow* r, float dT) {
 			if (Mouse::isButtonPressed(Mouse::Left)) { // is LMB down?
 				if (!press_locked) {
 					press_locked = true;
 					// check if any box here, but dont execute
-					for (int i = 0; i < buttons.count(); i++) {
-						Button b = buttons.getValue(i);
-						if (b.IsMouseInArea()) {
-							selected = true;
-							selected_button = b;
-							break;
-						}
+					std::vector<Button> b = this->getButtonsInMouse(r);
+					if (b.size() != 0) {
+						selected = true;
+						selected_button = b[0];
 					}
 				}
 			}
@@ -31,7 +42,13 @@ namespace Rendering {
 
 					if (selected) {
 						selected = false;
-						selected_button.onButtonPress();
+
+						for (Button b : this->getButtonsInMouse(r)) {
+							if (!memcmp(&b, &selected_button, sizeof Button)) { // check if selected button is still selected by mouse
+								selected_button.onButtonPress();
+								break;
+							}
+						}
 					}
 				}
 			}

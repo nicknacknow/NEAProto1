@@ -4,6 +4,12 @@
 #include "Singleton.h"
 #include "Renderable.h"
 
+#include "Text.h"
+
+#include "Button.h"
+
+#include "MouseHandler.h"
+
 using namespace sf;
 
 namespace Rendering {
@@ -49,11 +55,23 @@ namespace Rendering {
 		*/
 		void addRenderable(Renderable* r);
 
-		/**
-		 * @brief 
-		 * @return 
-		*/
-		Vector2i GetMousePosition();
+		Rendering::Text CreateText() {
+			sf::Text t; // set initial data (passed thru args) to text here
+			
+			Rendering::Text real(t);
+
+			this->addRenderable(&real);
+			return real;
+		}
+
+		Rendering::Button CreateButton(button_click_function f = NULL) {
+			Button real;
+			real.func = f;
+
+			MouseHandler::GetSingleton()->AddButton(real);
+			this->addRenderable(&real);
+			return real;
+		}
 	private:
 		void initiate(const char* title, int width, int height);
 		void main();

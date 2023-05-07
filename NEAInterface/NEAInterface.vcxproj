@@ -138,13 +138,17 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="KeyboardHandler.h" />
     <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MouseHandler.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Renderable.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

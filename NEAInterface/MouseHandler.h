@@ -42,9 +42,10 @@ namespace Rendering {
 
 					if (selected) {
 						selected = false;
-
 						for (Button b : this->getButtonsInMouse(r)) {
-							if (!memcmp(&b, &selected_button, sizeof Button)) { // check if selected button is still selected by mouse
+							if (b.get() == selected_button.get()) // had to do this instead of a memcmp for some reason
+							{ // check if selected button is still selected by mouse
+								
 								selected_button.onButtonPress();
 								break;
 							}

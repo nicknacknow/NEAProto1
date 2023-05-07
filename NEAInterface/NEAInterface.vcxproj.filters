@@ -19,6 +19,9 @@
     <Filter Include="Source Files\common">
       <UniqueIdentifier>{619f7d70-ab52-4984-a9a6-8865ed83eb7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scenes">
+      <UniqueIdentifier>{ab8b0d63-c311-4276-bc48-2663f9299576}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -58,6 +61,18 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBox.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

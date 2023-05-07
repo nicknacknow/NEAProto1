@@ -9,12 +9,13 @@
 #include "Button.h"
 
 #include "MouseHandler.h"
+#include "KeyboardHandler.h"
 
 using namespace sf;
 
 namespace Rendering {
 	typedef void (*render_step_function)(RenderWindow* r, float dT);
-	class Render : public Singleton<Render>
+	class Render
 	{
 	public:
 		Render() {}
@@ -26,6 +27,11 @@ namespace Rendering {
 		 * @param height height of main window
 		*/
 		Render(const char* title, int width, int height) {
+			this->initiate(title, width, height);
+			this->main();
+		}
+
+		void icba(const char* title, int width, int height) {
 			this->initiate(title, width, height);
 			this->main();
 		}
@@ -55,8 +61,14 @@ namespace Rendering {
 		*/
 		void addRenderable(Renderable* r);
 
-		Rendering::Text CreateText() {
+		Rendering::Text CreateText(const char* string = "") {
 			sf::Text t; // set initial data (passed thru args) to text here
+
+			Font arial;
+			this->findFont("arial", arial);
+
+			t.setFont(arial);
+			t.setString(string);
 			
 			Rendering::Text real(t);
 
@@ -72,10 +84,33 @@ namespace Rendering {
 			this->addRenderable(&real);
 			return real;
 		}
+
+		Rendering::TextBox CreateTextBox(Rendering::Text label) {
+			TextBox tb;
+			tb.func = [&](Rendering::Button* b) {
+				KeyboardHandler::GetSingleton()->SetSelectedTextBox(tb);
+			};
+			
+			tb.SetLabel(label);
+
+			MouseHandler::GetSingleton()->AddButton(tb);
+			this->addRenderable(&tb);
+			return tb;
+		}
+
+		std::vector<Rendering::Renderable*> renderables;
+
+		
 	private:
 		void initiate(const char* title, int width, int height);
 		void main();
 
 		RenderWindow* mainWindow;
 	};
+
+#ifndef help_me
+#define help_me
+	static Render* RENDasdasdER_CLASS = new Render();
+#endif
 }
+

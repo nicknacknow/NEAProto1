@@ -25,7 +25,8 @@ namespace Rendering {
 		//~RenderValue() {}
 	};
 
-	typedef void (*step_function)(RenderValue*, float);
+	class Renderable; // so can be used in typedef before it's properly defined
+	typedef void (*step_function)(Rendering::Renderable*, float);
 
 	/**
 	 * @brief virtual class - allow functions to be overridden
@@ -39,17 +40,18 @@ namespace Rendering {
 		virtual render_type GetType() { return render_type::tNone; };
 		virtual RenderValue* get() { return new RenderValue; }
 
-		void step(float dT) {
-			for (int i = 0; i < step_functions.count(); i++)
-				step_functions.getValue(i)(this->get(), dT);
+		virtual void step(float dT) {
+			//for (int i = 0; i < step_functions.size(); i++)
+			//	step_functions.at(i)(this, dT);
 		}
-		void addstepfunction(step_function f) {
-			step_functions.AddValue(f);
-		}
+		/*void addstepfunction(step_function f) {
+			printf("hi\n");
+			step_functions.push_back(f);
+		}*/
 
 		// add a 'addstepfunction' method so different renderables of same type execute different things at step
 	private:
-		LinkedList<step_function> step_functions;
+		//std::vector<step_function> step_functions;
 	};
 
 	//LinkedList<Renderable> renderables;

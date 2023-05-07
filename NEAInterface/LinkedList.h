@@ -16,7 +16,7 @@ public:
 	 * @brief adds value to end of list
 	*/
 	void AddValue(T val) {
-		if (start == nullptr) { start = new element(val); return; }
+		if (start == nullptr) { this->start = new element(val); return; }
 
 		element* i = start;
 		while (i != nullptr) { // somewhat un-needed but just incase :P

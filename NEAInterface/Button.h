@@ -1,9 +1,14 @@
 #pragma once
 #include "Rectangle.h"
 
+#include <functional>
+
 
 namespace Rendering {
-	typedef void (*button_click_function)();
+	class Button;
+	typedef std::function<void(Button*)> button_click_function;
+	//typedef void (*button_click_function)(Button* self);
+
 	class Button : public Rectangle {
 	public:
 		Button() {}
@@ -13,13 +18,31 @@ namespace Rendering {
 			//this->get()->rect.setPosition(pos);
 			//MouseHandler::GetSingleton()->AddButton(this); -- create Render::CreateButton as well as other renderables. maybe make into 1 function, pass string for type and return type is Renderable? vararg which can be passed to initialiser
 		//}
+		
+		// setLabel function
+		void SetLabel(Rendering::Text _t) {
+			this->label = _t;
+		}
+
+		Rendering::Text GetLabel() {
+			return this->label;
+		}
+
+		virtual void step(float dT) {
+			if (this->label.get() == nullptr) { return; } // dont have a label ? return.
+
+			this->label.GetValue()->setPosition(this->GetValue()->getPosition());
+		}
+
+		// create step function for button which updates Button->TextLabel stuff
+
 
 		/**
 		 * @brief called when button is pressed in MouseHandler.h, if a function has been assigned it will be called.
 		*/
 		void onButtonPress() {
 			printf("onButtonPress()");
-			if (func) func();
+			if (func) func(this);
 		}
 
 		/**
@@ -36,7 +59,7 @@ namespace Rendering {
 		}
 
 		button_click_function func; // could do a linked list but really it can all be put into a func
-	//private:
-		//Rendering::Rectangle r;
+	private:
+		Rendering::Text label;
 	};
 }

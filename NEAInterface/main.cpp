@@ -10,7 +10,16 @@
 #include "Circle.h"
 #include "Text.h"
 
-#define PROGRAM_NAME "Nick's NEA Program"
+#include "MainMenu.h"
+
+#define PROGRAM_NAME "Physics Simulator"
+
+//typedef std::function<void(const char*)> testy;
+typedef std::function<void(const char*)> testy;
+void call_lambda(testy f) {
+	// Call the lambda function
+	f("Hello");
+}
 
 int main() {
 	/*RenderWindow window(VideoMode(800, 600), "Title");
@@ -29,7 +38,11 @@ int main() {
 		window.display();
 	}*/
 
-	sf::Thread th([]() { Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600); });
+	//sf::Thread th([]() { Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600); });
+	
+	//Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600);
+
+	Rendering::RENDasdasdER_CLASS->icba("PROGRAM_NAME", 800, 600);
 
 	/*Rendering::Render::GetSingleton()->addRenderStepFunction([](RenderWindow* window, float dT) {
 		Vector2i pos = Mouse::getPosition(*window);
@@ -43,22 +56,28 @@ int main() {
 			circ.setPosition(pos.x, pos.y);
 
 			Rendering::Circle* c = new Rendering::Circle(circ);
-			c->addstepfunction([](Rendering::RenderValue* val, float dT) {
-				val->circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
-				});
+			//c->addstepfunction([](Rendering::RenderValue* val, float dT) {
+			//	val->circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
+			//	});
 
 			Rendering::Render::GetSingleton()->addRenderable(c);
 		}
 	});*/
 
-	th.launch(); // render in a separate thread
+	//th.launch(); // render in a separate thread
 
 
 
-	[](const char* hi) {
-		printf("%s\n", hi);
-	}("olleh");
+	//haha([&](const char* hi) {
+	//	printf("%s\n", hi);
+	//});
 
+	int x = 42;
+	call_lambda([&x](const char* msg) {
+		std::cout << "Message: " << msg << " x: " << x << std::endl;
+		});
+
+	system("pause");
 	return 1;
 }
 

@@ -10,7 +10,7 @@
 #include "Circle.h"
 #include "Text.h"
 
-#include "MainMenu.h"
+#include "SceneManager.h"
 
 #define PROGRAM_NAME "Physics Simulator"
 
@@ -70,10 +70,25 @@ int main() {
 
 	Sleep(1000); // wait for things to load in thread
 
-	Rendering::MainMenuScene mms; // load scene here
+	//Rendering::MainMenuScene mms; // load scene here
 
-	mms.setup();
+	//mms.setup();
 
+	Rendering::SceneManager* sceneManager = Rendering::SceneManager::GetSingleton();
+
+	Rendering::RENDER_CLASS->addRenderStepFunction([&](RenderWindow* window, float dT) {
+		sceneManager->step(window, dT);
+	});
+
+	Rendering::SHMScene* shms = Rendering::SHM_SCENE;
+
+	sceneManager->newScene(shms);
+	
+	//shms.setup();
+
+	//Rendering::RENDER_CLASS->addRenderStepFunction([&](RenderWindow* window, float dT) {
+	//	shms.step(dT);
+	//});
 
 	//haha([&](const char* hi) {
 	//	printf("%s\n", hi);

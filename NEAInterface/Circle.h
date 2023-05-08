@@ -13,6 +13,10 @@ namespace Rendering {
 		virtual RenderValue* get() {
 			return this->value;
 		}
+
+		sf::CircleShape* GetValue() {
+			return &(this->get()->circ);
+		}
 	private:
 		RenderValue* value;
 	};

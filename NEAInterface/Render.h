@@ -5,6 +5,7 @@
 #include "Renderable.h"
 
 #include "Text.h"
+#include "Circle.h"
 
 #include "Button.h"
 
@@ -14,7 +15,7 @@
 using namespace sf;
 
 namespace Rendering {
-	typedef void (*render_step_function)(RenderWindow* r, float dT);
+	typedef std::function<void(RenderWindow* r, float dT)> render_step_function;
 
 	LinkedList<std::pair<std::string, Font>> fonts; // list of name and font
 //LinkedList<Rendering::Renderable*> renderables; // list of Renderable items
@@ -78,11 +79,19 @@ namespace Rendering {
 		}
 
 		/**
-		 * @brief 
-		 * @param r 
+		 * @brief add the renderable input to the renderables list.
 		*/
 		void addRenderable(Renderable* r) {
 			renderables.push_back(r);
+		}
+
+		/**
+		 * @brief clear all renderables - clear the scene.
+		*/
+		std::vector<Renderable*> clearRenderables() {
+			std::vector<Renderable*> save = renderables;
+			renderables.clear();
+			return save;
 		}
 
 		Rendering::Text* CreateText(const char* string = "") {
@@ -96,6 +105,20 @@ namespace Rendering {
 			return real;
 		}
 
+		Rendering::Rectangle* CreateRectangle() {
+			sf::RectangleShape r;
+			Rendering::Rectangle* rect = new Rendering::Rectangle(r);
+			this->addRenderable(rect);
+			return rect;
+		}
+
+		Rendering::Circle* CreateCircle() {
+			sf::CircleShape c;
+			Rendering::Circle* circ = new Rendering::Circle(c);
+			this->addRenderable(circ);
+			return circ;
+		}
+
 		Rendering::Button* CreateButton(button_click_function f = NULL) {
 			Button* real = new Button;
 			real->func = f;
@@ -105,19 +128,16 @@ namespace Rendering {
 			return real;
 		}
 
-		Rendering::TextBox* CreateTextBox(Rendering::Text label) {
+		Rendering::TextBox* CreateTextBox() {
 			TextBox* tb = new TextBox;
-			printf("pre %p\n", tb);
-
-			tb->func = [&](Rendering::Button* ab) {
-				//printf("%p\n", ab);
-				//KeyboardHandler::GetSingleton()->SetSelectedTextBox(tb);
-			};
-			
-			tb->SetLabel(label);
-
 			MouseHandler::GetSingleton()->AddButton(tb);
 			this->addRenderable(tb);
+			return tb;
+		}
+
+		Rendering::TextBox* CreateTextBox(Rendering::Text* label) {
+			TextBox* tb = this->CreateTextBox();
+			tb->SetLabel(label);
 			return tb;
 		}
 

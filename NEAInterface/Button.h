@@ -15,18 +15,18 @@ namespace Rendering {
 		
 		// getter & setter for Label
 
-		void SetLabel(Rendering::Text _t) {
+		void SetLabel(Rendering::Text* _t) {
 			this->label = _t;
 		}
 
-		Rendering::Text GetLabel() {
+		Rendering::Text* GetLabel() {
 			return this->label;
 		}
 
 		virtual void step(float dT) {
-			if (this->label.get() == nullptr) { return; } // dont have a label ? return.
+			if (this->label == nullptr || this->label->get() == nullptr) { return; } // dont have a label ? return.
 
-			this->label.GetValue()->setPosition(this->GetValue()->getPosition());
+			this->label->GetValue()->setPosition(this->GetValue()->getPosition());
 		}
 
 
@@ -53,6 +53,6 @@ namespace Rendering {
 
 		button_click_function func; // could do a linked list but really it can all be put into a func
 	private:
-		Rendering::Text label;
+		Rendering::Text* label;
 	};
 }

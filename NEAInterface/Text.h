@@ -5,8 +5,14 @@ namespace Rendering {
 	class Text : public Renderable
 	{
 	public:
-		Text() {}
-		Text(sf::Text t) : value(new RenderValue(t)) {}
+		Text() {
+			//sf::Text* t;
+			//this->value = new RenderValue(t);
+		}
+		Text(sf::Text t) {
+			value = new RenderValue();
+			value->text = t;
+		}
 
 		virtual render_type GetType() { return render_type::tText; }
 

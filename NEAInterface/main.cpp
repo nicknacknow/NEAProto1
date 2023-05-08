@@ -42,9 +42,11 @@ int main() {
 	
 	//Rendering::Render::GetSingleton(PROGRAM_NAME, 800, 600);
 
-	Rendering::RENDasdasdER_CLASS->icba("PROGRAM_NAME", 800, 600);
-
-	/*Rendering::Render::GetSingleton()->addRenderStepFunction([](RenderWindow* window, float dT) {
+	sf::Thread th([]() {
+		Rendering::RENDER_CLASS->initialise(PROGRAM_NAME, 800, 600);
+		});
+	
+	/*Rendering::RENDasdasdER_CLASS->addRenderStepFunction([](RenderWindow* window, float dT) {
 		Vector2i pos = Mouse::getPosition(*window);
 
 		if (Mouse::isButtonPressed(Mouse::Button::Left)) {
@@ -60,12 +62,17 @@ int main() {
 			//	val->circ.setFillColor(Color(rand() % 255, rand() % 255, rand() % 255));
 			//	});
 
-			Rendering::Render::GetSingleton()->addRenderable(c);
+			Rendering::RENDasdasdER_CLASS->addRenderable(c);
 		}
 	});*/
 
-	//th.launch(); // render in a separate thread
+	th.launch(); // render in a separate thread
 
+	Sleep(1000); // wait for things to load in thread
+
+	Rendering::MainMenuScene mms; // load scene here
+
+	mms.setup();
 
 
 	//haha([&](const char* hi) {

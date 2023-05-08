@@ -1,4 +1,4 @@
-#include "Render.h"
+/*#include "Render.h"
 #include "Renderable.h"
 
 #include "Rectangle.h"
@@ -10,110 +10,17 @@
 
 #include "Button.h"
 
-LinkedList<std::pair<std::string, Font>> fonts; // list of name and font
-//LinkedList<Rendering::Renderable*> renderables; // list of Renderable items
-LinkedList<Rendering::render_step_function> render_step_functions; // list of functions to be called every render step
 
-using namespace Rendering;
+using namespace Rendering;*/
 
-void Render::addRenderable(Renderable* r) {
-	renderables.push_back(r);
-}
-
-void Render::addRenderStepFunction(render_step_function f) {
-	render_step_functions.AddValue(f);
-}
-
-bool Render::findFont(std::string fontname, Font& font) {
-	for (int i = 0; i < fonts.count(); i++)
-		if (fonts.getValue(i).first == fontname) {
-			font = fonts.getValue(i).second;
-			return true;
-		}
-	return false;
-}
-
-bool Render::addFont(std::string fontname, std::string filename) {
-	Font font;
-	if (!font.loadFromFile(filename)) return false;
-	fonts.AddValue(std::pair< std::string, Font>(fontname, font));
-
-	return true;
-}
-
-void Render::initiate(const char* title, int width, int height) {
-	this->mainWindow = new RenderWindow(VideoMode(width, height), title, Style::Close); // instantiates mainWindow property.
-	this->mainWindow->setFramerateLimit(60);
-
-	if (!this->addFont("arial", "resources/fonts/arial.ttf")) { // loads standard Arial font into program
-		exit(0);
-	}
-
-	this->addRenderStepFunction([](RenderWindow* window, float dT) {
-		Rendering::MouseHandler::GetSingleton()->step(window, dT);
-		});
-}
-
-class MainMenuScene : public Singleton<MainMenuScene> {
-public:
-	virtual void step() {
-
-	}
-
-	inline void setup(Rendering::Render* render) {
-		/* MainMenu will consist of :
-			* Text - title
-			* Button - SHM Scene
-			* Button - Simple Pendulum Scene
-			* Button - Mass-Spring System Scene
-		*/
-
-		Font arial;
-
-		if (!render->findFont("arial", arial)) {
-			printf("yo\n");
-			return; // error, arial font not found
-		}
-
-		Rendering::Text title = render->CreateText();
-		sf::Text* text = title.GetValue();
-		text->setFont(arial);
-		text->setFillColor(Color::Red);
-		text->setString("hiya");
-
-		//render->renderables.push_back(&real);
-		//printf("whyyyy asdas %p\n", Render::GetSingleton());
-		//Rendering::
-
-		//Rendering::Text title = Render::GetSingleton()->CreateText();
-		//printf("%p\n", title);
-		//sf::Text* text = title.GetValue();
-		//text->setFont(arial);
-		//text->setFillColor(Color::Red);
-		//text->setString("hiya");
-
-		//Rendering::Text title = render->CreateText();
-		//{ // new scope to keep variables clean in outer scope
-			//sf::Text* text = title.GetValue();
-			//text->setFont(arial);
-			//text->setFillColor(Color::Red);
-			//text->setString("Physics Simulator");
-			//text->setPosition(Vector2f(400, 100));
-		//}
-	}
-private:
-	//Rendering::Text title;
-	// here we will have all values such as buttons etc
-};
-
-void Render::main() {
+/*void Render::main() {
 	RenderWindow* window = this->mainWindow;
 
 	Font arial;
 	if (!this->findFont("arial", arial)) {
 		return; // error, arial font not found
 	}
-
+	*/
 	/*sf::Text miya;
 	miya.setFont(arial);
 	miya.setPosition(50, 50);
@@ -176,7 +83,7 @@ void Render::main() {
 	text->setString("hiya");*/
 
 
-
+/*
 	sf::Clock clock;
 	while (window->isOpen()) {
 		Event e;
@@ -222,7 +129,7 @@ void Render::main() {
 
 		window->display();
 	}
-}
+}*/
 
 // add render step functions for per render... then add MouseHandler etc which can be used by Buttons.
 // in mouseHandler i can use foreground checks etc... here we should only bother with rendering

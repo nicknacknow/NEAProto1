@@ -10,6 +10,9 @@ namespace Rendering {
 	public:
 		class Scene {
 		public:
+			/**
+			 * @brief Called every render step, is in charge of rendering and changing variables within the scene
+			*/
 			virtual void step() {
 
 			}
@@ -18,9 +21,13 @@ namespace Rendering {
 			// previous scenes will be stopped as the step function will no longer be ran
 			// scene step functions will be called from SceneManager -> Step
 			// which will simply just call selected scene step
-			// when setup is called, Render->Renderables will be emptied
+			// when setup is called, Render->Renderables must be emptied
 			// and other things such as render step funcs poss?
-			virtual void setup(Render* render) {
+
+			/**
+			 * @brief in charge of setting up the variables for a scene before it is rendered. i.e. buttons etc will be generated here
+			*/
+			virtual void setup() {
 
 			}
 		};

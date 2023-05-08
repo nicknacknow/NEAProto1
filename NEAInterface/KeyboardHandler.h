@@ -1,6 +1,6 @@
 #pragma once
+//#include "TextBox.h"
 #include "Render.h"
-#include "TextBox.h"
 
 using namespace sf;
 
@@ -8,22 +8,42 @@ using namespace sf;
 #define ENTER_KEY 13
 
 namespace Rendering {
-	class KeyboardHandler : public Singleton<KeyboardHandler> {
+	class TextBox; // forward declare so can use selected_textbox
+	TextBox* selected_textbox;
+	bool selected;
+
+	class TextBox : public Button {
 	public:
-		KeyboardHandler() {}
+		TextBox() {}
 
-		/**
-		 * @brief handles SFML event for TextEntered every step. 
-		*/
+		virtual void onButtonPress() {
+			printf("onButtonPress() textbox\n");
+
+			//Rendering::RENDER_CLASS;
+
+			//KeyboardHandler::SetSelectedTextBox(this);
+
+			printf("%p\n", selected_textbox);
+
+			selected_textbox = this;
+			selected = true;
+
+
+			printf("%p\n", selected_textbox);
+
+			if (func) func(this);
+		}
+
+		int length_limit = 10;
+	};
+
+	namespace KeyboardHandler {
+
 		void step(Event e) {
-			// check if text box is selected... may have to team up with mouse handler for this
-			// while text box is selected (not clicked off)
-			// check if Keyboard::isKeyPressed(Keyboard::Backspace)
-
-			// check if we have a selected textbox
-			// selected_textbox.get still has a value for some reaowsn
-			if (selected_textbox.get() != nullptr && this->selected) {
-				Rendering::Text l = selected_textbox.GetLabel();
+			printf("step %p\n", selected_textbox);
+			if (selected_textbox == nullptr) return;
+			if (selected_textbox->get() != nullptr && selected) {
+				Rendering::Text l = selected_textbox->GetLabel();
 				sf::Text* t = l.GetValue();
 
 				switch (e.text.unicode) {
@@ -35,50 +55,11 @@ namespace Rendering {
 					selected = false;
 					break;
 				default: // input any other text into selected textbox
-					if (t->getString().getSize() < selected_textbox.length_limit)
+					if (t->getString().getSize() < selected_textbox->length_limit)
 						t->setString(t->getString().toAnsiString() += e.text.unicode);
 					break;
 				}
 			}
-
-			// idea ! to get selected text box.. what we can do is :
-			// call MouseHandler -> get selected button
-			// if this button is also in a textbox linkedlist thingy
-			// then we can change its Label property to input?
-			// this will required extra logic in mousehandler->step.
-			// what we can do is.. do same textbox linkedlist check in step func
-			// if user is trying to interact with a textbox, 
-			// input will be handled differently compared to standard button.
-
-
-			// when textbox is selected.. this will be from
-			// its onButtonPress function,, 
-			// highlight it by changing button background color
-			// in this function also call a KeyboardHandler func
-			// which will consequently set this->selected_textbox to it
-
-			// anyway, to unselect a textbox you must press enter. 
-			// in this func maybe call the textbox function 'unselect'? or
-			// anyway this func will just change the background color back to normal
-
 		}
-
-		// create TextBox function... add it to MouseHandler too
-
-		void AddTextBox(TextBox b) {
-			this->textboxes.AddValue(b);
-		}
-
-		void SetSelectedTextBox(TextBox b) {
-			this->selected_textbox = b;
-			selected = true;
-		}
-
-	private:
-		LinkedList<TextBox> textboxes;
-		bool selected = false;
-		TextBox selected_textbox;
-	};
+	}
 }
-
-// textboxes only need to be sf::Text

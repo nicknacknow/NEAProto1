@@ -13,7 +13,7 @@ namespace Rendering {
 		tRectangleShape
 	};
 
-	union RenderValue {
+	struct RenderValue {
 		sf::Text text;
 		sf::CircleShape circ;
 		sf::RectangleShape rect;

@@ -11,12 +11,12 @@ namespace Rendering {
 
 		}
 
-		std::vector<Button> getButtonsInMouse(RenderWindow* r) {
-			std::vector<Button> v;
+		std::vector<Button*> getButtonsInMouse(RenderWindow* r) {
+			std::vector<Button*> v;
 
 			for (int i = 0; i < buttons.count(); i++) {
-				Button b = buttons.getValue(i);
-				if (b.IsMouseInArea(sf::Mouse::getPosition(*r))) // get mouse position within window
+				Button* b = buttons.getValue(i);
+				if (b->IsMouseInArea(sf::Mouse::getPosition(*r))) // get mouse position within window
 					v.push_back(b);
 			}
 
@@ -28,7 +28,7 @@ namespace Rendering {
 				if (!press_locked) {
 					press_locked = true;
 					// check if any box here, but dont execute
-					std::vector<Button> b = this->getButtonsInMouse(r);
+					std::vector<Button*> b = this->getButtonsInMouse(r);
 					if (b.size() != 0) {
 						selected = true;
 						selected_button = b[0];
@@ -42,11 +42,11 @@ namespace Rendering {
 
 					if (selected) {
 						selected = false;
-						for (Button b : this->getButtonsInMouse(r)) {
-							if (b.get() == selected_button.get()) // had to do this instead of a memcmp for some reason
+						for (Button* b : this->getButtonsInMouse(r)) {
+							if (b->get() == selected_button->get()) // had to do this instead of a memcmp for some reason
 							{ // check if selected button is still selected by mouse
 								
-								selected_button.onButtonPress();
+								selected_button->onButtonPress();
 								break;
 							}
 						}
@@ -55,15 +55,15 @@ namespace Rendering {
 			}
 		}
 
-		void AddButton(Button b) {
+		void AddButton(Button* b) {
 			this->buttons.AddValue(b);
 		}
 
 	private:
 		bool press_locked = false;
 
-		LinkedList<Button> buttons;
+		LinkedList<Button*> buttons;
 		bool selected = false;
-		Button selected_button;
+		Button* selected_button;
 	};
 }

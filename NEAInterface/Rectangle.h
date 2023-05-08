@@ -11,7 +11,7 @@ namespace Rendering {
 		}
 		Rectangle(sf::RectangleShape r) : value(new RenderValue(r)) {}
 
-		virtual render_type GetType() { return render_type::tCircleShape; }
+		virtual render_type GetType() { return render_type::tRectangleShape; }
 
 		virtual RenderValue* get() {
 			return this->value;

@@ -7,7 +7,6 @@
 namespace Rendering {
 	class Button;
 	typedef std::function<void(Button*)> button_click_function;
-	//typedef void (*button_click_function)(Button* self);
 
 	class Button : public Rectangle {
 	public:
@@ -47,12 +46,6 @@ namespace Rendering {
 					return true;
 				}
 			return false;
-		}
-
-		bool IsButtonRendered() {
-			//for (Rendering::Renderable* r : Rendering::RENDER_CLASS->renderables) {
-
-			//}
 		}
 
 		button_click_function func; // could do a linked list but really it can all be put into a func

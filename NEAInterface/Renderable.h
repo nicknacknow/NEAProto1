@@ -22,7 +22,6 @@ namespace Rendering {
 		RenderValue(sf::Text t) : text(t) {}
 		RenderValue(sf::CircleShape t) : circ(t) {}
 		RenderValue(sf::RectangleShape t) : rect(t) {}
-		//~RenderValue() {}
 	};
 
 	class Renderable; // so can be used in typedef before it's properly defined

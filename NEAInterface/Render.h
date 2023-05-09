@@ -186,10 +186,7 @@ namespace Rendering {
 				for (int xi = 0; xi < render_step_functions.count(); xi++)
 					render_step_functions.getValue(xi)(window, time);
 
-				// create a list / vector for just text and render through there?
-				// see what issues come from that
-
-				for (Renderable* r : renderables) {//for (int i = renderables.size() - 1; i >= 0; i--) {
+				for (Renderable* r : renderables) {
 					r->step(time);
 
 					switch (r->GetType()) // now we render the different types of renderable :)

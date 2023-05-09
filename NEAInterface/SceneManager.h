@@ -25,21 +25,14 @@ namespace Rendering {
 
 			}
 
-			// setup will be called whenever a new scene has been selected.
-			// previous scenes will be stopped as the step function will no longer be ran
-			// scene step functions will be called from SceneManager -> Step
-			// which will simply just call selected scene step
-			// when setup is called, Render->Renderables must be emptied
-			// and other things such as render step funcs poss?
-
 			/**
-			 * @brief in charge of setting up the variables for a scene before it is rendered. i.e. buttons etc will be generated here
+			 * @brief will be called whenever a new scene has been selected. in charge of setting up the variables for a scene before it is rendered. i.e. buttons etc will be generated here
 			*/
 			virtual void setup() {
 
 			}
 
-			std::vector<Renderable*> save;
+			std::vector<Renderable*> save; // cache of renderables on scene after setup
 			bool initialised = false;
 		};
 
@@ -84,11 +77,17 @@ namespace Rendering {
 		Scene* selected_scene; // so can call its step func etc. 
 	};
 
+	/**
+	 * @brief gets the string value from a textbox, and applies textbox limits to it to get expected value
+	*/
 	auto get_value_from_textbox = [](Rendering::TextBox* tb) {
 		std::string text = get_string_from_textbox(tb);
 		return text.substr(tb->remove_limit, text.length());
 	};
 
+	/**
+	 * @brief use of std::strtod to validate input, converting to number
+	*/
 	auto validate_double_input = [](std::string _inp, double& out) {
 		const char* inp = _inp.c_str();
 		char* endptr;
@@ -345,7 +344,6 @@ namespace Rendering {
 		back_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
 			{
 				Rendering::SceneManager::GetSingleton()->newScene(MAINMENU_SCENE);
-				// now we call SceneManager change scene
 			});
 		{
 			sf::RectangleShape* rect = back_button->GetValue();
@@ -387,7 +385,7 @@ namespace Rendering {
 
 			int len = strlen("Amplitude X: ");
 			amplitude_x_textbox->remove_limit = len;
-			amplitude_x_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			amplitude_x_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		amplitude_y_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -407,7 +405,7 @@ namespace Rendering {
 
 			int len = strlen("Amplitude Y: ");
 			amplitude_y_textbox->remove_limit = len;
-			amplitude_y_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			amplitude_y_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		time_period_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -427,7 +425,7 @@ namespace Rendering {
 
 			int len = strlen("Time Period: ");
 			time_period_textbox->remove_limit = len;
-			time_period_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			time_period_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		phase_angle_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -447,7 +445,7 @@ namespace Rendering {
 
 			int len = strlen("Phase Angle: ");
 			phase_angle_textbox->remove_limit = len;
-			phase_angle_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			phase_angle_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		system_mass_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -467,7 +465,7 @@ namespace Rendering {
 
 			int len = strlen("System Mass: ");
 			system_mass_textbox->remove_limit = len;
-			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			system_mass_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		kinetic_energy = Rendering::RENDER_CLASS->CreateText();
@@ -596,7 +594,7 @@ namespace Rendering {
 
 			int len = strlen("Length: ");
 			pendulum_length_textbox->remove_limit = len;
-			pendulum_length_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			pendulum_length_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		gravity_constant_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -616,7 +614,7 @@ namespace Rendering {
 
 			int len = strlen("Gravity: ");
 			gravity_constant_textbox->remove_limit = len;
-			gravity_constant_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			gravity_constant_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		initial_angle_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -636,7 +634,7 @@ namespace Rendering {
 
 			int len = strlen("Initial Angle: ");
 			initial_angle_textbox->remove_limit = len;
-			initial_angle_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			initial_angle_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		pendulum_bob = Rendering::RENDER_CLASS->CreateCircle();
@@ -671,7 +669,7 @@ namespace Rendering {
 
 			int len = strlen("System Mass: ");
 			system_mass_textbox->remove_limit = len;
-			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			system_mass_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		kinetic_energy = Rendering::RENDER_CLASS->CreateText();
@@ -865,7 +863,7 @@ namespace Rendering {
 
 			int len = strlen("Mass: ");
 			system_mass_textbox->remove_limit = len;
-			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			system_mass_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		gravity_constant_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -885,7 +883,7 @@ namespace Rendering {
 
 			int len = strlen("Gravity: ");
 			gravity_constant_textbox->remove_limit = len;
-			gravity_constant_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			gravity_constant_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		spring_constant_x_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -905,7 +903,7 @@ namespace Rendering {
 
 			int len = strlen("Spring Constant X: ");
 			spring_constant_x_textbox->remove_limit = len;
-			spring_constant_x_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			spring_constant_x_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		spring_constant_y_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -925,7 +923,7 @@ namespace Rendering {
 
 			int len = strlen("Spring Constant Y: ");
 			spring_constant_y_textbox->remove_limit = len;
-			spring_constant_y_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			spring_constant_y_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		damping_constant_x_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -945,7 +943,7 @@ namespace Rendering {
 
 			int len = strlen("Damping Constant X: ");
 			damping_constant_x_textbox->remove_limit = len;
-			damping_constant_x_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			damping_constant_x_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 		damping_constant_y_textbox = Rendering::RENDER_CLASS->CreateTextBox();
@@ -965,7 +963,7 @@ namespace Rendering {
 
 			int len = strlen("Damping Constant Y: ");
 			damping_constant_y_textbox->remove_limit = len;
-			damping_constant_y_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+			damping_constant_y_textbox->length_limit = len + MAX_DIGITS; 
 		}
 
 

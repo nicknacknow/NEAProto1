@@ -85,6 +85,4 @@ public:
 
 		return ret;
 	}
-
-	// add foreach function ?
 };

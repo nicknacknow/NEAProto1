@@ -1,5 +1,4 @@
 #pragma once
-//#include "TextBox.h"
 #include "Render.h"
 
 using namespace sf;
@@ -45,7 +44,9 @@ namespace Rendering {
 	};
 
 	namespace KeyboardHandler {
-
+		/**
+		 * @brief uses SFML's event when text has been input to handle text boxes.
+		*/
 		void step(Event e) {
 			if (selected_textbox == nullptr) return;
 			if (selected_textbox->get() != nullptr && selected) {

@@ -484,27 +484,41 @@ namespace Rendering {
 				std::string time_period_text = get_value_from_textbox(time_period_textbox);
 				std::string phase_angle_text = get_value_from_textbox(phase_angle_textbox);
 				std::string system_mass_text = get_value_from_textbox(system_mass_textbox);
-
-				if (!validate_double_input(amplitude_x_text, amplitude_x_value)) {
+				
+				double pre_amplitude_x_value;
+				if (!validate_double_input(amplitude_x_text, pre_amplitude_x_value)) {
 					printf("Invalid Amplitude X Value\n");
 					return;
 				}
-				if (!validate_double_input(amplitude_y_text, amplitude_y_value)) {
+				amplitude_x_value = pre_amplitude_x_value;
+
+				double pre_amplitude_y_value;
+				if (!validate_double_input(amplitude_y_text, pre_amplitude_y_value)) {
 					printf("Invalid Amplitude Y Value\n");
 					return;
 				}
-				if (!validate_double_input(time_period_text, time_period_value)) {
+				amplitude_y_value = pre_amplitude_y_value;
+
+				double pre_time_period_value;
+				if (!validate_double_input(time_period_text, pre_time_period_value)) {
 					printf("Invalid Time Period Value\n");
 					return;
 				}
-				if (!validate_double_input(phase_angle_text, phase_angle_value)) {
+				time_period_value = pre_time_period_value;
+
+				double pre_phase_angle_value;
+				if (!validate_double_input(phase_angle_text, pre_phase_angle_value)) {
 					printf("Invalid Phase Angle Value\n");
 					return;
 				}
-				if (!validate_double_input(system_mass_text, system_mass_value)) {
+				phase_angle_value = pre_phase_angle_value;
+
+				double pre_system_mass_value;
+				if (!validate_double_input(system_mass_text, pre_system_mass_value)) {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
+				system_mass_value = pre_system_mass_value;
 
 				simulate = true;
 			});
@@ -688,26 +702,33 @@ namespace Rendering {
 				std::string initial_angle_text = get_value_from_textbox(initial_angle_textbox);
 				std::string system_mass_text = get_value_from_textbox(system_mass_textbox);
 
-				if (!validate_double_input(pendulum_length_text, pendulum_length_value)) {
+				double pre_pendulum_length_value;
+				if (!validate_double_input(pendulum_length_text, pre_pendulum_length_value)) {
 					printf("Invalid Pendulum Length Value\n");
 					return;
 				}
+				pendulum_length_value = pre_pendulum_length_value;
 
-				if (!validate_double_input(gravity_constant_text, gravity_constant_value)) {
+				double pre_gravity_constant_value;
+				if (!validate_double_input(gravity_constant_text, pre_gravity_constant_value)) {
 					printf("Invalid Gravity Constant Value\n");
 					return;
 				}
+				gravity_constant_value = pre_gravity_constant_value;
 
-				if (!validate_double_input(initial_angle_text, initial_angle_value)) {
+				double pre_initial_angle_value;
+				if (!validate_double_input(initial_angle_text, pre_initial_angle_value)) {
 					printf("Invalid Initial Angle Value\n");
 					return;
 				}
-				initial_angle_value = deg2rad(initial_angle_value);
+				initial_angle_value = deg2rad(pre_initial_angle_value);
 
-				if (!validate_double_input(system_mass_text, system_mass_value)) {
+				double pre_system_mass_value;
+				if (!validate_double_input(system_mass_text, pre_system_mass_value)) {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
+				system_mass_value= pre_system_mass_value;
 
 				angle_velocity = 0;
 				angle_acceleration = 0;
@@ -976,35 +997,47 @@ namespace Rendering {
 				std::string damping_constant_x_text = get_value_from_textbox(damping_constant_x_textbox);
 				std::string damping_constant_y_text = get_value_from_textbox(damping_constant_y_textbox);
 
-				if (!validate_double_input(system_mass_text, system_mass_value)) {
+				double pre_system_mass_value;
+				if (!validate_double_input(system_mass_text, pre_system_mass_value)) {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
+				system_mass_value = pre_system_mass_value;
 
-				if (!validate_double_input(gravity_constant_text, gravity_constant_value)) {
+				double pre_gravity_constant_value;
+				if (!validate_double_input(gravity_constant_text, pre_gravity_constant_value)) {
 					printf("Invalid Gravity Constant Value\n");
 					return;
 				}
+				gravity_constant_value = pre_gravity_constant_value;
 
-				if (!validate_double_input(spring_constant_x_text, spring_constant_x_value)) {
+				double pre_spring_constant_x_value;
+				if (!validate_double_input(spring_constant_x_text, pre_spring_constant_x_value)) {
 					printf("Invalid Spring Constant X Value\n");
 					return;
 				}
+				spring_constant_x_value = pre_spring_constant_x_value;
 
-				if (!validate_double_input(spring_constant_y_text, spring_constant_y_value)) {
+				double pre_spring_constant_y_value;
+				if (!validate_double_input(spring_constant_y_text, pre_spring_constant_y_value)) {
 					printf("Invalid Spring Constant Y Value\n");
 					return;
 				}
+				spring_constant_y_value = pre_spring_constant_y_value;
 
-				if (!validate_double_input(damping_constant_x_text, damping_constant_x_value)) {
+				double pre_damping_constant_x_value;
+				if (!validate_double_input(damping_constant_x_text, pre_damping_constant_x_value)) {
 					printf("Invalid Damping Constant X Value\n");
 					return;
 				}
+				damping_constant_x_value = pre_damping_constant_x_value;
 
-				if (!validate_double_input(damping_constant_y_text, damping_constant_y_value)) {
+				double pre_damping_constant_y_value;
+				if (!validate_double_input(damping_constant_y_text, pre_damping_constant_y_value)) {
 					printf("Invalid Damping Constant Y Value\n");
 					return;
 				}
+				damping_constant_y_value = pre_damping_constant_y_value;
 
 				velocityX = 0;
 				velocityY = 0;

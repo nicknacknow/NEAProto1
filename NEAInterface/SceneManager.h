@@ -709,6 +709,10 @@ namespace Rendering {
 					printf("Invalid Pendulum Length Value\n");
 					return;
 				}
+				if (pre_pendulum_length_value < 0) {
+					printf("Pendulum Length Value Must Be Positive\n");
+					return;
+				}
 
 				double pre_gravity_constant_value;
 				if (!validate_double_input(gravity_constant_text, pre_gravity_constant_value)) {

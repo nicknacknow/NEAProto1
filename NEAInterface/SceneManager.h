@@ -490,35 +490,37 @@ namespace Rendering {
 					printf("Invalid Amplitude X Value\n");
 					return;
 				}
-				amplitude_x_value = pre_amplitude_x_value;
 
 				double pre_amplitude_y_value;
 				if (!validate_double_input(amplitude_y_text, pre_amplitude_y_value)) {
 					printf("Invalid Amplitude Y Value\n");
 					return;
 				}
-				amplitude_y_value = pre_amplitude_y_value;
 
 				double pre_time_period_value;
 				if (!validate_double_input(time_period_text, pre_time_period_value)) {
 					printf("Invalid Time Period Value\n");
 					return;
 				}
-				time_period_value = pre_time_period_value;
 
 				double pre_phase_angle_value;
 				if (!validate_double_input(phase_angle_text, pre_phase_angle_value)) {
 					printf("Invalid Phase Angle Value\n");
 					return;
 				}
-				phase_angle_value = pre_phase_angle_value;
 
 				double pre_system_mass_value;
 				if (!validate_double_input(system_mass_text, pre_system_mass_value)) {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
+
+				// set simulation variables now after error checking
 				system_mass_value = pre_system_mass_value;
+				phase_angle_value = pre_phase_angle_value;
+				time_period_value = pre_time_period_value;
+				amplitude_y_value = pre_amplitude_y_value;
+				amplitude_x_value = pre_amplitude_x_value;
 
 				simulate = true;
 			});
@@ -707,28 +709,30 @@ namespace Rendering {
 					printf("Invalid Pendulum Length Value\n");
 					return;
 				}
-				pendulum_length_value = pre_pendulum_length_value;
 
 				double pre_gravity_constant_value;
 				if (!validate_double_input(gravity_constant_text, pre_gravity_constant_value)) {
 					printf("Invalid Gravity Constant Value\n");
 					return;
 				}
-				gravity_constant_value = pre_gravity_constant_value;
 
 				double pre_initial_angle_value;
 				if (!validate_double_input(initial_angle_text, pre_initial_angle_value)) {
 					printf("Invalid Initial Angle Value\n");
 					return;
 				}
-				initial_angle_value = deg2rad(pre_initial_angle_value);
 
 				double pre_system_mass_value;
 				if (!validate_double_input(system_mass_text, pre_system_mass_value)) {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
-				system_mass_value= pre_system_mass_value;
+
+				// set the simulations values now after error checking
+				system_mass_value = pre_system_mass_value;
+				initial_angle_value = deg2rad(pre_initial_angle_value);
+				gravity_constant_value = pre_gravity_constant_value;
+				pendulum_length_value = pre_pendulum_length_value;
 
 				angle_velocity = 0;
 				angle_acceleration = 0;
@@ -1002,42 +1006,44 @@ namespace Rendering {
 					printf("Invalid System Mass Value\n");
 					return;
 				}
-				system_mass_value = pre_system_mass_value;
 
 				double pre_gravity_constant_value;
 				if (!validate_double_input(gravity_constant_text, pre_gravity_constant_value)) {
 					printf("Invalid Gravity Constant Value\n");
 					return;
 				}
-				gravity_constant_value = pre_gravity_constant_value;
 
 				double pre_spring_constant_x_value;
 				if (!validate_double_input(spring_constant_x_text, pre_spring_constant_x_value)) {
 					printf("Invalid Spring Constant X Value\n");
 					return;
 				}
-				spring_constant_x_value = pre_spring_constant_x_value;
 
 				double pre_spring_constant_y_value;
 				if (!validate_double_input(spring_constant_y_text, pre_spring_constant_y_value)) {
 					printf("Invalid Spring Constant Y Value\n");
 					return;
 				}
-				spring_constant_y_value = pre_spring_constant_y_value;
 
 				double pre_damping_constant_x_value;
 				if (!validate_double_input(damping_constant_x_text, pre_damping_constant_x_value)) {
 					printf("Invalid Damping Constant X Value\n");
 					return;
 				}
-				damping_constant_x_value = pre_damping_constant_x_value;
 
 				double pre_damping_constant_y_value;
 				if (!validate_double_input(damping_constant_y_text, pre_damping_constant_y_value)) {
 					printf("Invalid Damping Constant Y Value\n");
 					return;
 				}
+
+				// set the simulations values now after all the error checking
 				damping_constant_y_value = pre_damping_constant_y_value;
+				damping_constant_x_value = pre_damping_constant_x_value;
+				spring_constant_y_value = pre_spring_constant_y_value;
+				spring_constant_x_value = pre_spring_constant_x_value;
+				gravity_constant_value = pre_gravity_constant_value;
+				system_mass_value = pre_system_mass_value;
 
 				velocityX = 0;
 				velocityY = 0;

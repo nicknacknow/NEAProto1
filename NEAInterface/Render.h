@@ -153,6 +153,7 @@ namespace Rendering {
 				exit(0);
 			}
 
+			Rendering::MouseHandler::GetSingleton()->SetRenderables(this->renderables);
 			this->addRenderStepFunction([](RenderWindow* window, float dT) {
 				Rendering::MouseHandler::GetSingleton()->step(window, dT);
 				});
@@ -189,9 +190,6 @@ namespace Rendering {
 				// see what issues come from that
 
 				for (Renderable* r : renderables) {//for (int i = renderables.size() - 1; i >= 0; i--) {
-					//printf("%d\n", i);
-					//Rendering::Renderable* r = renderables.at(i);
-					//printf("%p %d\n", r, i);
 					r->step(time);
 
 					switch (r->GetType()) // now we render the different types of renderable :)

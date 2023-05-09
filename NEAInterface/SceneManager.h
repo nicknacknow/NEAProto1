@@ -1,4 +1,6 @@
 #pragma once
+#include <format>
+
 #include "Render.h"
 
 // create SceneManager singleton
@@ -19,7 +21,7 @@ namespace Rendering {
 			/**
 			 * @brief Called every render step, is in charge of rendering and changing variables within the scene
 			*/
-			virtual void step(float dT) {
+			virtual void step(RenderWindow* window, float dT) {
 
 			}
 
@@ -74,17 +76,40 @@ namespace Rendering {
 		*/
 		void step(RenderWindow* window, float dT) {
 			if (selected_scene != nullptr) {
-				selected_scene->step(dT);
+				selected_scene->step(window, dT);
 			}
 		}
 
 	private:
 		Scene* selected_scene; // so can call its step func etc. 
 	};
+
+	auto get_value_from_textbox = [](Rendering::TextBox* tb) {
+		std::string text = get_string_from_textbox(tb);
+		return text.substr(tb->remove_limit, text.length());
+	};
+
+	auto validate_double_input = [](std::string _inp, double& out) {
+		const char* inp = _inp.c_str();
+		char* endptr;
+		out = std::strtod(inp, &endptr);
+		return !(endptr == inp || *endptr != '\0');
+	};
 	
+	class MainMenuScene : public SceneManager::Scene {
+	public:
+		virtual void step(RenderWindow* window, float dT);
+		virtual void setup();
+	private:
+		// here we will have all values such as buttons etc
+		Rendering::Text* title;
+		Rendering::Button* shm_button;
+		Rendering::Button* sp_button;
+		Rendering::Button* mss_button;
+	};
 	class SHMScene : public SceneManager::Scene {
 	public:
-		virtual void step(float dT);
+		virtual void step(RenderWindow* window, float dT);
 		virtual void setup();
 	private:
 		// here we will have all values such as buttons etc
@@ -94,6 +119,8 @@ namespace Rendering {
 		Rendering::TextBox* amplitude_y_textbox;
 		Rendering::TextBox* time_period_textbox;
 		Rendering::TextBox* phase_angle_textbox;
+		Rendering::TextBox* system_mass_textbox;
+		Rendering::Text* kinetic_energy;
 		Rendering::Button* apply_button;
 
 		std::vector<Rendering::Circle*> points;
@@ -104,30 +131,184 @@ namespace Rendering {
 		double amplitude_y_value;
 		double time_period_value;
 		double phase_angle_value;
+		double system_mass_value;
 		bool simulate = false;
 		double t = 0; // time duration of simulation
 	};
-	class MainMenuScene : public SceneManager::Scene {
+	class SPScene : public SceneManager::Scene {
 	public:
-		virtual void step(float dT);
+		virtual void step(RenderWindow* window, float dT);
 		virtual void setup();
 	private:
-		// here we will have all values such as buttons etc
 		Rendering::Text* title;
-		Rendering::Button* shm_button;
-		Rendering::Button* sp_button;
-		Rendering::Button* mss_button;
+		Rendering::Button* back_button;
+		Rendering::TextBox* pendulum_length_textbox;
+		Rendering::TextBox* gravity_constant_textbox;
+		Rendering::TextBox* initial_angle_textbox;
+		Rendering::Circle* pendulum_bob;
+		Rendering::Circle* pendulum_anchor;
+		Rendering::TextBox* system_mass_textbox;
+		Rendering::Text* kinetic_energy;
+		Rendering::Button* apply_button;
+
+		int MAX_DIGITS = 4;
+
+		double pendulum_length_value;
+		double gravity_constant_value;
+		double initial_angle_value;
+		double system_mass_value;
+
+		double angle_velocity = 0;
+		double angle_acceleration = 0;
+		bool simulate = false;
 	};
-	static SHMScene* SHM_SCENE = new SHMScene;
+	class MSScene : public SceneManager::Scene {
+	public:
+		virtual void step(RenderWindow* window, float dT);
+		virtual void setup();
+	private:
+		Rendering::Text* title;
+		Rendering::Text* info;
+		Rendering::Text* kinetic_energy_text;
+		Rendering::Text* potential_energy_text;
+		Rendering::Button* back_button;
+		Rendering::Circle* system_point;
+		Rendering::Circle* anchor_point;
+		Rendering::TextBox* system_mass_textbox;
+		Rendering::TextBox* gravity_constant_textbox;
+		Rendering::TextBox* spring_constant_x_textbox;
+		Rendering::TextBox* spring_constant_y_textbox;
+		Rendering::TextBox* damping_constant_x_textbox;
+		Rendering::TextBox* damping_constant_y_textbox;
+		Rendering::Button* apply_button;
+
+		// dont forget kinetic energy !
+
+		int MAX_DIGITS = 4;
+		Vector2f origin = Vector2f(400, 200);
+
+		/*
+			MS will consist of :
+				* Title
+				* back button
+				* Circle spring end point
+				* Circle anchor point
+				* INPUT : textbox - mass of system
+				* INPUT : textbox - gravity constant
+				* INPUT : textbox - spring constant     vvvvvvvvvvv
+				* INPUT : textbox - damping constant (maybe diff for x & y?)
+				* apply button
+			* input: mouse, when held down set spring end point to mouse pos. do this in step, using mouse held down thingy for right mouse button !!
+		*/
+
+		double system_mass_value;
+		double gravity_constant_value;
+		double spring_constant_x_value;
+		double spring_constant_y_value;
+		double damping_constant_x_value;
+		double damping_constant_y_value;
+
+		double velocityX = 0;
+		double velocityY = 0;
+		bool simulate = false;
+	};
+
 	static MainMenuScene* MAINMENU_SCENE = new MainMenuScene;
+	static SHMScene* SHM_SCENE = new SHMScene;
+	static SPScene* SP_SCENE = new SPScene;
+	static MSScene* MS_SCENE = new MSScene;
 
-	void SHMScene::step(float dT) {
+	void MainMenuScene::step(RenderWindow* window, float dT) {
+
+	}
+	void MainMenuScene::setup() {
+		/* MainMenu will consist of :
+				* Text - title
+				* Button - SHM Scene
+				* Button - Simple Pendulum Scene
+				* Button - Mass-Spring System Scene
+			*/
+
+		title = Rendering::RENDER_CLASS->CreateText();
+		{ // new scope to keep variables clean in outer scope
+			sf::Text* text = title->GetValue();
+			text->setFillColor(Color::Red);
+			text->setString("Physics Simulator - Main Menu");
+			text->setPosition(Vector2f(200, 50));
+		}
+
+		shm_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+			{
+				Rendering::SceneManager::GetSingleton()->newScene(SHM_SCENE);
+			});
+		{
+			sf::RectangleShape* rect = shm_button->GetValue();
+			rect->setSize(Vector2f(330, 40));
+			rect->setPosition(Vector2f(245, 100));
+
+			// create label for shm button
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			sf::Text* label_text = label->GetValue();
+			label_text->setFillColor(Color::Red);
+			label_text->setString("Simple Harmonic Motion");
+
+			shm_button->SetLabel(label);
+		}
+
+		sp_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+			{
+				Rendering::SceneManager::GetSingleton()->newScene(SP_SCENE);
+			});
+		{
+			sf::RectangleShape* rect = sp_button->GetValue();
+			rect->setSize(Vector2f(330, 40));
+			rect->setPosition(Vector2f(245, 150));
+
+			// create label for shm button
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			sf::Text* label_text = label->GetValue();
+			label_text->setFillColor(Color::Red);
+			label_text->setString("Simple Pendulum");
+
+			sp_button->SetLabel(label);
+		}
+
+		mss_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+			{
+				Rendering::SceneManager::GetSingleton()->newScene(MS_SCENE);
+			});
+		{
+			sf::RectangleShape* rect = mss_button->GetValue();
+			rect->setSize(Vector2f(330, 40));
+			rect->setPosition(Vector2f(245, 200));
+
+			// create label for shm button
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			sf::Text* label_text = label->GetValue();
+			label_text->setFillColor(Color::Red);
+			label_text->setString("Mass-Spring System");
+
+			mss_button->SetLabel(label);
+		}
+	}
+
+	void SHMScene::step(RenderWindow* window, float dT) {
 		if (simulate) {
-			double omega = (2 * PI) / time_period_value; // scale amplitude up by 10 since we're dealing with pixels
+			double omega = (2 * PI) / time_period_value; 
 
-			for (double i = 0; i <= 10; i++) {
+			for (double i = 0; i <= 10; i++) { // scale amplitude up by 10 since we're dealing with pixels
 				double x = (amplitude_x_value * 10) * cos(deg2rad(omega * (t + i / 10) + phase_angle_value));
 				double y = (amplitude_y_value * 10) * cos(deg2rad(omega * (t + i / 10) + phase_angle_value));
+
+				if (i == 0) { // retrieve kinetic energy values of one point
+					double vx = -(amplitude_x_value) * omega * sin(deg2rad(omega * t + phase_angle_value)); // velocities of x and y component
+					double vy = -(amplitude_y_value) * omega * sin(deg2rad(omega * t + phase_angle_value));
+
+					double kex = 0.5 * system_mass_value * vx * vx; // kinetic energies of x and y components
+					double key = 0.5 * system_mass_value * vy * vy;
+					
+					kinetic_energy->GetValue()->setString("total kinetic energy: " + std::format("{:.2f} J", kex + key));
+				}
 
 				Rendering::Circle* r = points[i];
 				Vector2f starting_pos = Vector2f(150 + i * 50, 200);
@@ -144,25 +325,14 @@ namespace Rendering {
 			SHM Scene will consist of :
 			 * Text - title
 			 * Button - back to main menu
-			 * Rectangle list - the points at which SHM will take place on
+			 * Circle list - the points at which SHM will take place on
 			 * TextBox - INPUT: Amplitude of motion in the X direction
 			 * TextBox - INPUT: Amplitude of motion in the Y direction
 			 * TextBox - INPUT: Time period of motion
 			 * TextBox - INPUT: Phase angle of motion
+			 * TextBox - INPUT: Mass of system (for ke)
 			 * Button - apply inputs & error check
 		*/
-
-		auto get_value_from_textbox = [](Rendering::TextBox* tb) {
-			std::string text = get_string_from_textbox(tb);
-			return text.substr(tb->remove_limit, text.length());
-		};
-
-		auto validate_double_input = [](std::string _inp, double& out) {
-			const char* inp = _inp.c_str();
-			char* endptr;
-			out = std::strtod(inp, &endptr);
-			return !(endptr == inp || *endptr != '\0');
-		};
 
 		title = Rendering::RENDER_CLASS->CreateText();
 		{
@@ -174,7 +344,6 @@ namespace Rendering {
 
 		back_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
 			{
-				printf("\nClicked back_button!\n");
 				Rendering::SceneManager::GetSingleton()->newScene(MAINMENU_SCENE);
 				// now we call SceneManager change scene
 			});
@@ -281,36 +450,65 @@ namespace Rendering {
 			phase_angle_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
 		}
 
+		system_mass_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = system_mass_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(10, 540));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("System Mass: ");
+			}
+			system_mass_textbox->SetLabel(label);
+
+			int len = strlen("System Mass: ");
+			system_mass_textbox->remove_limit = len;
+			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		kinetic_energy = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = kinetic_energy->GetValue();
+			text->setPosition(Vector2f(170, 540));
+			text->setCharacterSize(17);
+			text->setFillColor(Color::Red);
+			text->setString("total kinetic energy: ");
+		}
+
 		apply_button = Rendering::RENDER_CLASS->CreateButton([&](Rendering::Button* self)
 			{
-				printf("\nClicked apply_button!\n");
-
 				std::string amplitude_x_text = get_value_from_textbox(amplitude_x_textbox);
 				std::string amplitude_y_text = get_value_from_textbox(amplitude_y_textbox);
 				std::string time_period_text = get_value_from_textbox(time_period_textbox);
 				std::string phase_angle_text = get_value_from_textbox(phase_angle_textbox);
+				std::string system_mass_text = get_value_from_textbox(system_mass_textbox);
 
 				if (!validate_double_input(amplitude_x_text, amplitude_x_value)) {
-					printf("amplitude_x_text is wrong\n");
+					printf("Invalid Amplitude X Value\n");
 					return;
 				}
 				if (!validate_double_input(amplitude_y_text, amplitude_y_value)) {
-					printf("amplitude_y_text is wrong\n");
+					printf("Invalid Amplitude Y Value\n");
 					return;
 				}
 				if (!validate_double_input(time_period_text, time_period_value)) {
-					printf("time_period_text is wrong\n");
+					printf("Invalid Time Period Value\n");
 					return;
 				}
 				if (!validate_double_input(phase_angle_text, phase_angle_value)) {
-					printf("phase_angle_text is wrong\n");
+					printf("Invalid Phase Angle Value\n");
+					return;
+				}
+				if (!validate_double_input(system_mass_text, system_mass_value)) {
+					printf("Invalid System Mass Value\n");
 					return;
 				}
 
-				printf("its rur\n");
-				//printf("%f %f %f %f\n", amplitude_x_value, amplitude_y_value, time_period_value, phase_angle_value);
 				simulate = true;
-				//printf("%s %s %s %s\n", amplitude_x_text.c_str(), amplitude_y_text.c_str(), time_period_text.c_str(), phase_angle_text.c_str());
 			});
 		{
 			sf::RectangleShape* rect = apply_button->GetValue();
@@ -328,81 +526,505 @@ namespace Rendering {
 		}
 	}
 	
-	void MainMenuScene::step(float dT) {
+	void SPScene::step(RenderWindow* window, float dT) {
+		if (!simulate) return;
+		double force = gravity_constant_value * sin(initial_angle_value);
+		angle_acceleration = -force / pendulum_length_value;
+		angle_velocity += angle_acceleration;
+		initial_angle_value += angle_velocity;
 
+		double linear_velocity = angle_velocity * pendulum_length_value;
+		double ke = 0.5 * system_mass_value * linear_velocity * linear_velocity;
+
+		kinetic_energy->GetValue()->setString("total kinetic energy: " + std::format("{:.2f} J", ke));
+
+		sf::CircleShape* c = pendulum_bob->GetValue();
+		c->setPosition(Vector2f(400, 200) + Vector2f(pendulum_length_value * sin(initial_angle_value), pendulum_length_value * cos(initial_angle_value)));
 	}
-	void MainMenuScene::setup() {
-		/* MainMenu will consist of :
+	void SPScene::setup() {
+		/*
+			SP Scene will consist of :
 				* Text - title
-				* Button - SHM Scene
-				* Button - Simple Pendulum Scene
-				* Button - Mass-Spring System Scene
-			*/
+				* Button - back to main menu
+				* TextBox - INPUT: length of pendulum arm
+				* TextBox - INPUT: gravity constant
+				* TextBox - INPUT: initial angle of pendulum (convert from degrees input to radians)
+				* TextBox - INPUT: Mass of system (for ke)
+				* Circle - pendulum bob
+		*/
 
 		title = Rendering::RENDER_CLASS->CreateText();
-		{ // new scope to keep variables clean in outer scope
+		{
 			sf::Text* text = title->GetValue();
 			text->setFillColor(Color::Red);
-			text->setString("Physics Simulator - Main Menu");
-			text->setPosition(Vector2f(200, 50));
+			text->setString("Simple Pendulum");
+			text->setPosition(Vector2f(280, 10));
 		}
 
-		shm_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+		back_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
 			{
-				Rendering::SceneManager::GetSingleton()->newScene(SHM_SCENE);
-
-				printf("\nClicked shm_button!\n");
+				Rendering::SceneManager::GetSingleton()->newScene(MAINMENU_SCENE);
 			});
 		{
-			sf::RectangleShape* rect = shm_button->GetValue();
-			rect->setSize(Vector2f(330, 40));
-			rect->setPosition(Vector2f(245, 100));
+			sf::RectangleShape* rect = back_button->GetValue();
+			rect->setSize(Vector2f(70, 40));
+			rect->setPosition(Vector2f(10, 10));
 
 			// create label for shm button
 			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
 			sf::Text* label_text = label->GetValue();
 			label_text->setFillColor(Color::Red);
-			label_text->setString("Simple Harmonic Motion");
+			label_text->setString("Back");
 
-			shm_button->SetLabel(label);
+			back_button->SetLabel(label);
 		}
 
-		sp_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
-			{
-				printf("\nClicked sp_buton\n");
-			});
+		pendulum_length_textbox = Rendering::RENDER_CLASS->CreateTextBox();
 		{
-			sf::RectangleShape* rect = sp_button->GetValue();
-			rect->setSize(Vector2f(330, 40));
-			rect->setPosition(Vector2f(245, 150));
+			sf::RectangleShape* r = pendulum_length_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(10, 570));
 
-			// create label for shm button
 			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
-			sf::Text* label_text = label->GetValue();
-			label_text->setFillColor(Color::Red);
-			label_text->setString("Simple Pendulum");
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Length: ");
+			}
+			pendulum_length_textbox->SetLabel(label);
 
-			sp_button->SetLabel(label);
+			int len = strlen("Length: ");
+			pendulum_length_textbox->remove_limit = len;
+			pendulum_length_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
 		}
 
-		mss_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+		gravity_constant_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = gravity_constant_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(170, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
 			{
-				printf("\nClicked mss_button\n");
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Gravity: ");
+			}
+			gravity_constant_textbox->SetLabel(label);
+
+			int len = strlen("Gravity: ");
+			gravity_constant_textbox->remove_limit = len;
+			gravity_constant_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		initial_angle_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = initial_angle_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(330, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Initial Angle: ");
+			}
+			initial_angle_textbox->SetLabel(label);
+
+			int len = strlen("Initial Angle: ");
+			initial_angle_textbox->remove_limit = len;
+			initial_angle_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		pendulum_bob = Rendering::RENDER_CLASS->CreateCircle();
+		{
+			sf::CircleShape* circ = pendulum_bob->GetValue();
+			circ->setRadius(10);
+			circ->setPosition(Vector2f(400, 200));
+		}
+
+		pendulum_anchor = Rendering::RENDER_CLASS->CreateCircle();
+		{ // just a static circle for visualisation
+			sf::CircleShape* circ = pendulum_anchor->GetValue();
+			circ->setRadius(5);
+			circ->setFillColor(Color::Cyan);
+			circ->setPosition(Vector2f(405, 205));
+		}
+
+		system_mass_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = system_mass_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(10, 540));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("System Mass: ");
+			}
+			system_mass_textbox->SetLabel(label);
+
+			int len = strlen("System Mass: ");
+			system_mass_textbox->remove_limit = len;
+			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		kinetic_energy = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = kinetic_energy->GetValue();
+			text->setPosition(Vector2f(170, 540));
+			text->setCharacterSize(17);
+			text->setFillColor(Color::Red);
+			text->setString("total kinetic energy: ");
+		}
+
+		apply_button = Rendering::RENDER_CLASS->CreateButton([&](Rendering::Button* self)
+			{
+				std::string pendulum_length_text = get_value_from_textbox(pendulum_length_textbox);
+				std::string gravity_constant_text = get_value_from_textbox(gravity_constant_textbox);
+				std::string initial_angle_text = get_value_from_textbox(initial_angle_textbox);
+				std::string system_mass_text = get_value_from_textbox(system_mass_textbox);
+
+				if (!validate_double_input(pendulum_length_text, pendulum_length_value)) {
+					printf("Invalid Pendulum Length Value\n");
+					return;
+				}
+
+				if (!validate_double_input(gravity_constant_text, gravity_constant_value)) {
+					printf("Invalid Gravity Constant Value\n");
+					return;
+				}
+
+				if (!validate_double_input(initial_angle_text, initial_angle_value)) {
+					printf("Invalid Initial Angle Value\n");
+					return;
+				}
+				initial_angle_value = deg2rad(initial_angle_value);
+
+				if (!validate_double_input(system_mass_text, system_mass_value)) {
+					printf("Invalid System Mass Value\n");
+					return;
+				}
+
+				angle_velocity = 0;
+				angle_acceleration = 0;
+				simulate = true;
 			});
 		{
-			sf::RectangleShape* rect = mss_button->GetValue();
-			rect->setSize(Vector2f(330, 40));
-			rect->setPosition(Vector2f(245, 200));
+			sf::RectangleShape* rect = apply_button->GetValue();
+			rect->setSize(Vector2f(45, 20));
+			rect->setPosition(Vector2f(750, 570));
+			rect->setFillColor(Color::Green);
 
-			// create label for shm button
 			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
 			sf::Text* label_text = label->GetValue();
+			label_text->setCharacterSize(17);
 			label_text->setFillColor(Color::Red);
-			label_text->setString("Mass-Spring System");
+			label_text->setString("Apply");
 
-			mss_button->SetLabel(label);
+			apply_button->SetLabel(label);
 		}
 	}
 
-	
+	void MSScene::step(RenderWindow* window, float dT) {
+		if (!simulate) return;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
+			Vector2i p = Mouse::getPosition(*window);
+			origin = Vector2f(p.x, p.y);
+			anchor_point->GetValue()->setPosition(origin + Vector2f(5, 5));
+		}
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			Vector2i p = Mouse::getPosition(*window);
+			system_point->GetValue()->setPosition(Vector2f(p.x, p.y));
+
+			velocityX = 0;
+			velocityY = 0;
+		}
+		else {
+			Vector2f pos = system_point->GetValue()->getPosition();
+
+			double springForceX = -spring_constant_x_value * (pos.x - origin.x);
+			double springForceY = -spring_constant_y_value * (pos.y - origin.y);
+
+			double dampingForceX = damping_constant_x_value * velocityX;
+			double dampingForceY = damping_constant_y_value * velocityY;
+
+			double forceX = springForceX - dampingForceX;
+			double forceY = springForceY + system_mass_value * gravity_constant_value - dampingForceY; // must account for weight
+
+			double accelerationX = forceX / system_mass_value;
+			double accelerationY = forceY / system_mass_value;
+
+			velocityX = velocityX + accelerationX * dT;
+			velocityY = velocityY + accelerationY * dT;
+
+			double kinetic_energy_x = 0.5 * system_mass_value * velocityX * velocityX;
+			double kinetic_energy_y = 0.5 * system_mass_value * velocityY * velocityY;
+			double kinetic_energy = kinetic_energy_x + kinetic_energy_y;
+
+			kinetic_energy_text->GetValue()->setString("Kinetic Energy: " + std::format("{:.2f} J", kinetic_energy));
+
+			double potential_energy_x = 0.5 * (-springForceX) * (pos.x - origin.x);
+			double potential_energy_y = 0.5 * (-springForceY) * (pos.y - origin.y);
+			double potential_energy = potential_energy_x + potential_energy_y;
+
+			potential_energy_text->GetValue()->setString("Potential Energy: " + std::format("{:.2f} J", kinetic_energy));
+
+			// may have to add dampening to velocities here
+			system_point->GetValue()->setPosition(Vector2f(pos.x + velocityX, pos.y + velocityY));
+		}
+	}
+	void MSScene::setup() {
+		title = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = title->GetValue();
+			text->setFillColor(Color::Red);
+			text->setString("Mass-Spring System");
+			text->setPosition(Vector2f(200, 10));
+		}
+
+		info = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = info->GetValue();
+			text->setFillColor(Color::Red);
+			text->setCharacterSize(17);
+			text->setString("Right Mouse Button to move point\nMiddle Mouse Button to move origin");
+			text->setPosition(Vector2f(500, 10));
+		}
+
+		kinetic_energy_text = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = kinetic_energy_text->GetValue();
+			text->setFillColor(Color::Red);
+			text->setCharacterSize(17);
+			text->setString("Kinetic Energy: ");
+			text->setPosition(Vector2f(10, 540));
+		}
+
+		potential_energy_text = Rendering::RENDER_CLASS->CreateText();
+		{
+			sf::Text* text = potential_energy_text->GetValue();
+			text->setFillColor(Color::Red);
+			text->setCharacterSize(17);
+			text->setString("Potential Energy: ");
+			text->setPosition(Vector2f(10, 515));
+		}
+
+		back_button = Rendering::RENDER_CLASS->CreateButton([](Rendering::Button* self)
+			{
+				Rendering::SceneManager::GetSingleton()->newScene(MAINMENU_SCENE);
+			});
+		{
+			sf::RectangleShape* rect = back_button->GetValue();
+			rect->setSize(Vector2f(70, 40));
+			rect->setPosition(Vector2f(10, 10));
+
+			// create label for shm button
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			sf::Text* label_text = label->GetValue();
+			label_text->setFillColor(Color::Red);
+			label_text->setString("Back");
+
+			back_button->SetLabel(label);
+		}
+
+		system_point = Rendering::RENDER_CLASS->CreateCircle();
+		{
+			sf::CircleShape* circ = system_point->GetValue();
+			circ->setRadius(10);
+			circ->setPosition(origin);
+		}
+
+		anchor_point = Rendering::RENDER_CLASS->CreateCircle();
+		{ // just a static circle for visualisation
+			sf::CircleShape* circ = anchor_point->GetValue();
+			circ->setRadius(5);
+			circ->setFillColor(Color::Cyan);
+			circ->setPosition(origin + Vector2f(5, 5)); // to account for radius
+		}
+
+		system_mass_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = system_mass_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(10, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Mass: ");
+			}
+			system_mass_textbox->SetLabel(label);
+
+			int len = strlen("Mass: ");
+			system_mass_textbox->remove_limit = len;
+			system_mass_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		gravity_constant_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = gravity_constant_textbox->GetValue();
+			r->setSize(Vector2f(150, 20));
+			r->setPosition(Vector2f(170, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Gravity: ");
+			}
+			gravity_constant_textbox->SetLabel(label);
+
+			int len = strlen("Gravity: ");
+			gravity_constant_textbox->remove_limit = len;
+			gravity_constant_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		spring_constant_x_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = spring_constant_x_textbox->GetValue();
+			r->setSize(Vector2f(190, 20));
+			r->setPosition(Vector2f(330, 540));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Spring Constant X: ");
+			}
+			spring_constant_x_textbox->SetLabel(label);
+
+			int len = strlen("Spring Constant X: ");
+			spring_constant_x_textbox->remove_limit = len;
+			spring_constant_x_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		spring_constant_y_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = spring_constant_y_textbox->GetValue();
+			r->setSize(Vector2f(190, 20));
+			r->setPosition(Vector2f(330, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Spring Constant Y: ");
+			}
+			spring_constant_y_textbox->SetLabel(label);
+
+			int len = strlen("Spring Constant Y: ");
+			spring_constant_y_textbox->remove_limit = len;
+			spring_constant_y_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		damping_constant_x_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = damping_constant_x_textbox->GetValue();
+			r->setSize(Vector2f(210, 20));
+			r->setPosition(Vector2f(530, 540));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Damping Constant X: ");
+			}
+			damping_constant_x_textbox->SetLabel(label);
+
+			int len = strlen("Damping Constant X: ");
+			damping_constant_x_textbox->remove_limit = len;
+			damping_constant_x_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+		damping_constant_y_textbox = Rendering::RENDER_CLASS->CreateTextBox();
+		{
+			sf::RectangleShape* r = damping_constant_y_textbox->GetValue();
+			r->setSize(Vector2f(210, 20));
+			r->setPosition(Vector2f(530, 570));
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			{
+				sf::Text* text = label->GetValue();
+				text->setCharacterSize(17);
+				text->setFillColor(Color::Red);
+				text->setString("Damping Constant Y: ");
+			}
+			damping_constant_y_textbox->SetLabel(label);
+
+			int len = strlen("Damping Constant Y: ");
+			damping_constant_y_textbox->remove_limit = len;
+			damping_constant_y_textbox->length_limit = len + MAX_DIGITS; // 3 digits for input
+		}
+
+
+		apply_button = Rendering::RENDER_CLASS->CreateButton([&](Rendering::Button* self)
+			{
+				std::string system_mass_text = get_value_from_textbox(system_mass_textbox);
+				std::string gravity_constant_text = get_value_from_textbox(gravity_constant_textbox);
+				std::string spring_constant_x_text = get_value_from_textbox(spring_constant_x_textbox);
+				std::string spring_constant_y_text = get_value_from_textbox(spring_constant_y_textbox);
+				std::string damping_constant_x_text = get_value_from_textbox(damping_constant_x_textbox);
+				std::string damping_constant_y_text = get_value_from_textbox(damping_constant_y_textbox);
+
+				if (!validate_double_input(system_mass_text, system_mass_value)) {
+					printf("Invalid System Mass Value\n");
+					return;
+				}
+
+				if (!validate_double_input(gravity_constant_text, gravity_constant_value)) {
+					printf("Invalid Gravity Constant Value\n");
+					return;
+				}
+
+				if (!validate_double_input(spring_constant_x_text, spring_constant_x_value)) {
+					printf("Invalid Spring Constant X Value\n");
+					return;
+				}
+
+				if (!validate_double_input(spring_constant_y_text, spring_constant_y_value)) {
+					printf("Invalid Spring Constant Y Value\n");
+					return;
+				}
+
+				if (!validate_double_input(damping_constant_x_text, damping_constant_x_value)) {
+					printf("Invalid Damping Constant X Value\n");
+					return;
+				}
+
+				if (!validate_double_input(damping_constant_y_text, damping_constant_y_value)) {
+					printf("Invalid Damping Constant Y Value\n");
+					return;
+				}
+
+				velocityX = 0;
+				velocityY = 0;
+				simulate = true;
+			});
+		{
+			sf::RectangleShape* rect = apply_button->GetValue();
+			rect->setSize(Vector2f(45, 20));
+			rect->setPosition(Vector2f(750, 570));
+			rect->setFillColor(Color::Green);
+
+			Rendering::Text* label = Rendering::RENDER_CLASS->CreateText();
+			sf::Text* label_text = label->GetValue();
+			label_text->setCharacterSize(17);
+			label_text->setFillColor(Color::Red);
+			label_text->setString("Apply");
+
+			apply_button->SetLabel(label);
+		}
+	}
 }

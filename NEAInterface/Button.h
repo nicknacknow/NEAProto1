@@ -29,12 +29,10 @@ namespace Rendering {
 			this->label->GetValue()->setPosition(this->GetValue()->getPosition());
 		}
 
-
 		/**
 		 * @brief called when button is pressed in MouseHandler.h, if a function has been assigned it will be called.
 		*/
 		virtual void onButtonPress() {
-			printf("onButtonPress()");
 			if (func) func(this);
 		}
 
@@ -49,6 +47,12 @@ namespace Rendering {
 					return true;
 				}
 			return false;
+		}
+
+		bool IsButtonRendered() {
+			//for (Rendering::Renderable* r : Rendering::RENDER_CLASS->renderables) {
+
+			//}
 		}
 
 		button_click_function func; // could do a linked list but really it can all be put into a func

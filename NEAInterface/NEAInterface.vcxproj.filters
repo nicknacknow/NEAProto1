@@ -16,18 +16,12 @@
     <Filter Include="Header Files\common">
       <UniqueIdentifier>{089882ae-a607-430d-9a28-ac0ff69fd4d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\common">
-      <UniqueIdentifier>{619f7d70-ab52-4984-a9a6-8865ed83eb7f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

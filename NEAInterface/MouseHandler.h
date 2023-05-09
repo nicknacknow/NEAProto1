@@ -11,12 +11,23 @@ namespace Rendering {
 
 		}
 
-		std::vector<Button*> getButtonsInMouse(RenderWindow* r) {
+		bool IsButtonRendered(Button* b) {
+			for (Rendering::Renderable* r : *this->renderables) {
+				if (r != nullptr && &(r->get()->rect) == b->GetValue())
+					return true;
+			}
+			return false;
+		}
+
+		/**
+		 * @brief returns a list of buttons that the mouse is hovering over
+		*/
+		std::vector<Button*> GetButtonsInMouse(RenderWindow* r) {
 			std::vector<Button*> v;
 
 			for (int i = 0; i < buttons.count(); i++) {
-				Button* b = buttons.getValue(i);
-				if (b->IsMouseInArea(sf::Mouse::getPosition(*r))) // get mouse position within window
+				Button* b = buttons.getValue(i); // must check if buttons are actually visible.. check renderables
+				if (b->IsMouseInArea(sf::Mouse::getPosition(*r)) && IsButtonRendered(b)) // get mouse position within window
 					v.push_back(b);
 			}
 
@@ -28,7 +39,7 @@ namespace Rendering {
 				if (!press_locked) {
 					press_locked = true;
 					// check if any box here, but dont execute
-					std::vector<Button*> b = this->getButtonsInMouse(r);
+					std::vector<Button*> b = this->GetButtonsInMouse(r);
 					if (b.size() != 0) {
 						selected = true;
 						selected_button = b[0];
@@ -42,7 +53,7 @@ namespace Rendering {
 
 					if (selected) {
 						selected = false;
-						for (Button* b : this->getButtonsInMouse(r)) {
+						for (Button* b : this->GetButtonsInMouse(r)) {
 							if (b->get() == selected_button->get()) // had to do this instead of a memcmp for some reason
 							{ // check if selected button is still selected by mouse
 								
@@ -59,7 +70,12 @@ namespace Rendering {
 			this->buttons.AddValue(b);
 		}
 
+		void SetRenderables(std::vector<Rendering::Renderable*>& r) {
+			this->renderables = &r;
+		}
+
 	private:
+		std::vector<Rendering::Renderable*>* renderables;
 		bool press_locked = false;
 
 		LinkedList<Button*> buttons;

@@ -34,8 +34,6 @@ namespace Rendering {
 		}
 
 		virtual void onButtonPress() {
-			printf("onButtonPress() textbox\n");
-
 			selected_textbox = this;
 			selected = true;
 
@@ -49,14 +47,10 @@ namespace Rendering {
 	namespace KeyboardHandler {
 
 		void step(Event e) {
-			printf("step %p\n", selected_textbox);
-
 			if (selected_textbox == nullptr) return;
 			if (selected_textbox->get() != nullptr && selected) {
-				printf("here 1\n");
 				Rendering::Text* l = selected_textbox->GetLabel();
 				sf::Text* t = l->GetValue();
-				printf("here 2 %d\n", e.text.unicode);
 
 				switch (e.text.unicode) {
 				case DELETE_KEY: // remove last character of textbox
@@ -73,11 +67,8 @@ namespace Rendering {
 					break;
 				}
 				default: // input any other text into selected textbox
-					printf("hello\n");
-					if (t->getString().getSize() < selected_textbox->length_limit) {
-						printf("%s\n", get_string_from_textbox(selected_textbox));
+					if (t->getString().getSize() < selected_textbox->length_limit) 
 						t->setString(t->getString().toAnsiString() += e.text.unicode);
-					}
 					break;
 				}
 			}

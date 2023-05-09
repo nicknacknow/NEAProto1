@@ -35,26 +35,16 @@ namespace Rendering {
 	{
 	public:
 		/**
-		 * @return returns type of Renderable
+		 * @brief returns type of Renderable
 		*/
 		virtual render_type GetType() { return render_type::tNone; };
+		/**
+		 * @brief returns Renderable RenderValue
+		*/
 		virtual RenderValue* get() { return new RenderValue; }
 
 		virtual void step(float dT) {
-			//for (int i = 0; i < step_functions.size(); i++)
-			//	step_functions.at(i)(this, dT);
+
 		}
-		/*void addstepfunction(step_function f) {
-			printf("hi\n");
-			step_functions.push_back(f);
-		}*/
-
-		// add a 'addstepfunction' method so different renderables of same type execute different things at step
-	private:
-		//std::vector<step_function> step_functions;
 	};
-
-	//LinkedList<Renderable> renderables;
 }
-// https://en.sfml-dev.org/forums/index.php?topic=22887.0	
-// https://stackoverflow.com/questions/64975510/drawing-from-a-vector-of-objects-using-sfml

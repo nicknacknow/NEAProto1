@@ -99,9 +99,9 @@ namespace Rendering {
 
 			t.setString(string);
 			
-			Rendering::Text* real = new Rendering::Text(t);
+			Rendering::Text* real = new Rendering::Text(t); // create renderable text value
 
-			this->addRenderable(real);
+			this->addRenderable(real); // add to render list
 			return real;
 		}
 
@@ -183,6 +183,7 @@ namespace Rendering {
 
 				window->clear(Color(33, 33, 33));
 
+				// calls step functions for objects that want to interact during the rendering process, but aren't renderables themselves.
 				for (int xi = 0; xi < render_step_functions.count(); xi++)
 					render_step_functions.getValue(xi)(window, time);
 

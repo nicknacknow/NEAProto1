@@ -1006,26 +1006,6 @@ namespace Rendering {
 					return;
 				}
 
-				if (spring_constant_x_value > 5000) {
-					printf("Spring Constant X Value Must Not Exceed 5000\n");
-					return;
-				}
-
-				if (spring_constant_y_value > 5000) {
-					printf("Spring Constant Y Value Must Not Exceed 5000\n");
-					return;
-				}
-
-				if (damping_constant_x_value > 5000) {
-					printf("Damping Constant X Value Must Not Exceed 5000\n");
-					return;
-				}
-
-				if (damping_constant_y_value > 5000) {
-					printf("Damping Constant Y Value Must Not Exceed 5000\n");
-					return;
-				}
-
 				velocityX = 0;
 				velocityY = 0;
 				simulate = true;

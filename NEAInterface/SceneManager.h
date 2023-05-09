@@ -771,7 +771,7 @@ namespace Rendering {
 			double potential_energy_y = 0.5 * (-springForceY) * (pos.y - origin.y);
 			double potential_energy = potential_energy_x + potential_energy_y;
 
-			potential_energy_text->GetValue()->setString("Potential Energy: " + std::format("{:.2f} J", kinetic_energy));
+			potential_energy_text->GetValue()->setString("Potential Energy: " + std::format("{:.2f} J", potential_energy));
 
 			// may have to add dampening to velocities here
 			system_point->GetValue()->setPosition(Vector2f(pos.x + velocityX, pos.y + velocityY));
@@ -1003,6 +1003,26 @@ namespace Rendering {
 
 				if (!validate_double_input(damping_constant_y_text, damping_constant_y_value)) {
 					printf("Invalid Damping Constant Y Value\n");
+					return;
+				}
+
+				if (spring_constant_x_value > 5000) {
+					printf("Spring Constant X Value Must Not Exceed 5000\n");
+					return;
+				}
+
+				if (spring_constant_y_value > 5000) {
+					printf("Spring Constant Y Value Must Not Exceed 5000\n");
+					return;
+				}
+
+				if (damping_constant_x_value > 5000) {
+					printf("Damping Constant X Value Must Not Exceed 5000\n");
+					return;
+				}
+
+				if (damping_constant_y_value > 5000) {
+					printf("Damping Constant Y Value Must Not Exceed 5000\n");
 					return;
 				}
 

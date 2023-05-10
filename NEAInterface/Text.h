@@ -24,10 +24,16 @@ namespace Rendering {
 			return &(this->get()->text);
 		}
 
+		/**
+		 * @brief adds a function to be called every step related to the text value.
+		*/
 		void addstepfunction(step_function f) {
 			step_functions.push_back(f);
 		}
 
+		/**
+		 * @brief loops through the functions stored and calls them every step
+		*/
 		virtual void step(float dT) {
 			for (int i = 0; i < step_functions.size(); i++)
 				step_functions.at(i)(this, dT);

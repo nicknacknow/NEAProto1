@@ -94,6 +94,9 @@ namespace Rendering {
 			return save;
 		}
 
+		/**
+		 * @brief Creates a Text value and renders it.
+		*/
 		Rendering::Text* CreateText(const char* string = "") {
 			sf::Text t; // set initial data (passed thru args) to text here
 
@@ -105,6 +108,9 @@ namespace Rendering {
 			return real;
 		}
 
+		/**
+		 * @brief Creates a Rectangle value and renders it.
+		*/
 		Rendering::Rectangle* CreateRectangle() {
 			sf::RectangleShape r;
 			Rendering::Rectangle* rect = new Rendering::Rectangle(r);
@@ -112,6 +118,9 @@ namespace Rendering {
 			return rect;
 		}
 
+		/**
+		 * @brief Creates a Circle value and renders it.
+		*/
 		Rendering::Circle* CreateCircle() {
 			sf::CircleShape c;
 			Rendering::Circle* circ = new Rendering::Circle(c);
@@ -119,6 +128,9 @@ namespace Rendering {
 			return circ;
 		}
 
+		/**
+		 * @brief Creates a Button value and renders it. Takes an on click function as an input. Adds to MouseHandler class.
+		*/
 		Rendering::Button* CreateButton(button_click_function f = NULL) {
 			Button* real = new Button;
 			real->func = f;
@@ -128,6 +140,9 @@ namespace Rendering {
 			return real;
 		}
 
+		/**
+		 * @brief Creates a TextBox value and renders it. Adds to MouseHandler class.
+		*/
 		Rendering::TextBox* CreateTextBox() {
 			TextBox* tb = new TextBox;
 			MouseHandler::GetSingleton()->AddButton(tb);
@@ -135,6 +150,9 @@ namespace Rendering {
 			return tb;
 		}
 
+		/**
+		 * @brief Creates a TextBox value with a label as an input, so it can be set automatically.
+		*/
 		Rendering::TextBox* CreateTextBox(Rendering::Text* label) {
 			TextBox* tb = this->CreateTextBox();
 			tb->SetLabel(label);
@@ -143,8 +161,9 @@ namespace Rendering {
 
 		std::vector<Rendering::Renderable*> renderables;
 
-		
-	//private:
+		/**
+		 * @brief Initialises variables to be used across the program.
+		*/
 		void initiate(const char* title, int width, int height) {
 			this->mainWindow = new RenderWindow(VideoMode(width, height), title, Style::Close); // instantiates mainWindow property.
 			this->mainWindow->setFramerateLimit(60);
@@ -158,6 +177,10 @@ namespace Rendering {
 				Rendering::MouseHandler::GetSingleton()->step(window, dT);
 				});
 		}
+
+		/**
+		 * @brief The main rendering function - deals with render step functions, events and the drawing of objects.
+		*/
 		void main() {
 			RenderWindow* window = this->mainWindow;
 

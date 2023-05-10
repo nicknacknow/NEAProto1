@@ -55,7 +55,9 @@ public:
 		return i->val;
 	}
 
-	
+	/**
+	 * @brief pops value off of linked list and returns it.
+	*/
 	T popValue() {
 		element* i = start;
 		element* prev = i; // give it a value so when set ->next it isn't null and cause an error.. when prev is start, ->next will be nullptr anyway so no damage done

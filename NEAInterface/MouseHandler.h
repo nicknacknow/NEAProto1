@@ -11,6 +11,9 @@ namespace Rendering {
 
 		}
 
+		/**
+		 * @brief loops through the renderables list and returns whether or not the input button is in this list
+		*/
 		bool IsButtonRendered(Button* b) {
 			for (Rendering::Renderable* r : *this->renderables) {
 				if (r != nullptr && &(r->get()->rect) == b->GetValue())
@@ -34,6 +37,9 @@ namespace Rendering {
 			return v;
 		}
 
+		/**
+		 * @brief called every renderstep, checks and processes mouse activity 
+		*/
 		void step(RenderWindow* r, float dT) {
 			if (Mouse::isButtonPressed(Mouse::Left)) { // is LMB down?
 				if (!press_locked) {
@@ -66,10 +72,16 @@ namespace Rendering {
 			}
 		}
 
+		/**
+		 * @brief adds button to the button list
+		*/
 		void AddButton(Button* b) {
 			this->buttons.AddValue(b);
 		}
 
+		/**
+		 * @brief sets a pointer to the renderables list to be saved for the mouse handler
+		*/
 		void SetRenderables(std::vector<Rendering::Renderable*>& r) {
 			this->renderables = &r;
 		}

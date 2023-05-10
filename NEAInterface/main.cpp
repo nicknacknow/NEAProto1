@@ -34,11 +34,3 @@ int main() {
 
 	return 1;
 }
-
-/*
-
-Tools > Options > Text Editor > C/C++ > CodeStyle > General > Generated documentation comments style
-
-Set this to Doxygen (/**)
-
-*/

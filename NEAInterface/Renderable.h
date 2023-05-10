@@ -42,6 +42,9 @@ namespace Rendering {
 		*/
 		virtual RenderValue* get() { return new RenderValue; }
 
+		/**
+		 * @brief called just before renderable is rendered every step
+		*/
 		virtual void step(float dT) {
 
 		}

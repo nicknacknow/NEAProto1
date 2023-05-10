@@ -22,6 +22,9 @@ namespace Rendering {
 			return this->label;
 		}
 
+		/**
+		 * @brief if there is a label, update its position to the Button.
+		*/
 		virtual void step(float dT) {
 			if (this->label == nullptr || this->label->get() == nullptr) { return; } // dont have a label ? return.
 

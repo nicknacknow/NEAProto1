@@ -17,6 +17,9 @@ namespace Rendering {
 	public:
 		TextBox() {}
 
+		/**
+		 * @brief handles highlighting and label position
+		*/
 		virtual void step(float dT) {
 			if (this == selected_textbox) { // simple selection highlighting
 				this->GetValue()->setFillColor(Color::Cyan);
@@ -32,6 +35,9 @@ namespace Rendering {
 			label->GetValue()->setPosition(this->GetValue()->getPosition());
 		}
 
+		/**
+		 * @brief override of the Button onButtonPress virtual function, used for the KeyboardHandler to understand which textbox has been selected.
+		*/
 		virtual void onButtonPress() {
 			selected_textbox = this;
 			selected = true;
